@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大學部 111-115 學年度錄取平均分數 - 五大群組視覺化儀表板</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Apache ECharts CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap');
+        body {
+            font-family: 'Noto Sans TC', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #060b14;
+            color: #ffffff;
+            font-size: 16px;
+        }
+        .glass-card {
+            background: #111a2e;
+            border: 1px solid #283958;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #ffffff;
+            font-weight: 800;
+            border-color: #60a5fa;
+            box-shadow: 0 4px 18px 0 rgba(37, 99, 235, 0.6);
+        }
+        .custom-scroll::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #090f1d;
+            border-radius: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #334e79;
+            border-radius: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #466ba3;
+        }
+        .rank-badge-1 {
+            background: #d97706;
+            color: #ffffff;
+            font-weight: 900;
+            border: 1px solid #fbbf24;
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
+        }
+        .rank-badge-2 {
+            background: #475569;
+            color: #ffffff;
+            font-weight: 900;
+            border: 1px solid #94a3b8;
+        }
+        .rank-badge-3 {
+            background: #9a3412;
+            color: #ffffff;
+            font-weight: 900;
+            border: 1px solid #fdba74;
+        }
+        .rank-badge-other {
+            background: #1e293b;
+            color: #cbd5e1;
+            font-weight: 700;
+            border: 1px solid #334155;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-24">
+    <!-- Header Navbar (Full Width 96%) -->
+    <header class="border-b border-slate-700/80 bg-[#090f1d]/95 sticky top-0 z-50 backdrop-blur-md shadow-xl">
+        <div class="w-[96%] max-w-[2000px] mx-auto py-4 flex flex-col xl:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-3.5">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-400 flex items-center justify-center shadow-lg shadow-blue-500/40">
+                    <i class="fa-solid fa-chart-line text-white text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-3">
+                        <span>大學部 111-115 學年度錄取分數分析儀表板</span>
+                        <span class="text-xs sm:text-sm font-bold px-2.5 py-0.5 rounded-full bg-blue-500/20 text-sky-300 border border-blue-400/40">
+                            90%+ 寬幅清晰版
+                        </span>
+                    </h1>
+                    <p class="text-sm text-slate-300 font-medium mt-0.5">五大醫療衛生領域群組歷年平均錄取標準走勢與組內排名全方位對照</p>
+                </div>
+            </div>
+
+            <!-- Group Navigation Tabs (Larger font & high contrast) -->
+            <nav class="flex flex-wrap items-center gap-2 p-1.5 bg-[#050811] rounded-2xl border border-slate-700" id="groupTabs">
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container (96% Width Layout) -->
+    <main class="w-[96%] max-w-[2000px] mx-auto pt-6 space-y-6">
+        
+        <!-- Group Overview KPI Cards (Bigger & Higher Contrast) -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4" id="kpiContainer">
+        </section>
+
+        <!-- Main Chart & Side Selector Section (Ultra-Wide 12-Column Grid) -->
+        <section class="glass-card rounded-2xl p-5 sm:p-7 space-y-5">
+            <!-- Top Controls Bar -->
+            <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-4 border-b border-slate-700">
+                <div>
+                    <div class="flex items-center space-x-3">
+                        <span id="groupBadge" class="px-3.5 py-1 text-sm font-black rounded-full bg-blue-500/20 text-sky-300 border border-blue-400/50">
+                            醫學組
+                        </span>
+                        <h2 id="chartTitle" class="text-xl sm:text-2xl font-black text-white">
+                            歷年平均分數走勢比較 (111 - 115 年)
+                        </h2>
+                    </div>
+                    <p class="text-sm text-slate-300 font-medium mt-1">
+                        每條折線代表一個系組 <span class="text-sky-300 font-bold font-mono">[校名] [系組名]</span>。請使用右側選單勾選呈現校系，或點擊預設按鈕快速切換。
+                    </p>
+                </div>
+
+                <!-- Global Action Controls -->
+                <div class="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
+                    <!-- Smooth Line Toggle -->
+                    <button id="smoothToggleBtn" class="px-4 py-2.5 text-sm font-bold bg-slate-800 hover:bg-slate-700 text-white rounded-xl border border-slate-600 transition flex items-center gap-2 shadow-md">
+                        <i class="fa-solid fa-bezier-curve text-sky-400"></i> <span>平滑曲線: 開</span>
+                    </button>
+
+                    <!-- Export PNG -->
+                    <button id="exportImageBtn" class="px-5 py-2.5 text-sm font-bold bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow-lg shadow-blue-600/40 transition flex items-center gap-2 border border-blue-400">
+                        <i class="fa-solid fa-download"></i> <span>匯出高畫質圖表 (PNG)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Two-Column Chart Layout: [Chart (Left 75%)] + [Side Selector (Right 25%)] -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                
+                <!-- Left: Line Chart Area (9 cols on large screens for massive width) -->
+                <div class="lg:col-span-8 xl:col-span-9 space-y-2.5">
+                    <div class="flex items-center justify-between text-sm px-2 text-slate-200 font-semibold">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>目前圖表顯示：<span id="selectedCountBadge" class="font-extrabold text-sky-300 text-base">0</span> / <span id="totalCountBadge">0</span> 個系組</span>
+                        </div>
+                        <div class="text-xs sm:text-sm text-slate-300 hidden sm:block">
+                            💡 滑鼠移至曲線上可查看精確分數與組內排名對照
+                        </div>
+                    </div>
+                    <div class="relative w-full h-[600px] sm:h-[650px] rounded-2xl bg-[#090f1d] border border-slate-700 p-3 shadow-inner">
+                        <div id="mainChart" class="w-full h-full"></div>
+                    </div>
+                </div>
+
+                <!-- Right: Dedicated School Selection Panel (3-4 cols on large screens) -->
+                <div class="lg:col-span-4 xl:col-span-3 bg-[#0d1526] rounded-2xl border border-slate-700 p-4 sm:p-5 space-y-4 flex flex-col h-[650px] shadow-lg">
+                    <!-- Panel Header -->
+                    <div class="flex items-center justify-between border-b border-slate-700 pb-3 shrink-0">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-sliders text-sky-400 text-base"></i>
+                            <h3 class="text-base font-extrabold text-white">自選顯示校系</h3>
+                        </div>
+                        <span class="text-xs font-bold px-2 py-0.5 rounded bg-blue-500/20 text-sky-300 border border-blue-500/30">即時篩選</span>
+                    </div>
+
+                    <!-- Preset Quick Filter Buttons -->
+                    <div class="grid grid-cols-2 gap-2 shrink-0">
+                        <button onclick="applyPreset('all')" class="px-2.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-100 text-xs sm:text-sm font-bold rounded-xl border border-slate-600 transition flex items-center justify-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-check-double text-sky-400"></i> <span>全部勾選</span>
+                        </button>
+                        <button onclick="applyPreset('none')" class="px-2.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-100 text-xs sm:text-sm font-bold rounded-xl border border-slate-600 transition flex items-center justify-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-ban text-rose-400"></i> <span>全部取消</span>
+                        </button>
+                        <button onclick="applyPreset('top5')" class="px-2.5 py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 text-xs sm:text-sm font-bold rounded-xl border border-amber-500/40 transition flex items-center justify-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-crown text-amber-400"></i> <span>前 5 名校系</span>
+                        </button>
+                        <button onclick="applyPreset('public')" class="px-2.5 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 text-xs sm:text-sm font-bold rounded-xl border border-emerald-500/40 transition flex items-center justify-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-building-columns text-emerald-400"></i> <span>僅公立大學</span>
+                        </button>
+                    </div>
+
+                    <!-- Search within group -->
+                    <div class="relative shrink-0">
+                        <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="text" id="sideSearchInput" placeholder="搜尋此群組校系名稱..." 
+                            class="w-full bg-[#070b14] border border-slate-600 text-white text-sm font-medium rounded-xl pl-9 pr-3 py-2 focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-400 transition placeholder:text-slate-400">
+                    </div>
+
+                    <!-- Checklist Container (Scrollable) -->
+                    <div class="flex-1 overflow-y-auto custom-scroll pr-1.5 space-y-2" id="schoolChecklist">
+                        <!-- Dynamic Checkbox Items with High Contrast -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Detailed Data Table Section with Annual Rankings (Larger Fonts & Clear Grid) -->
+        <section class="glass-card rounded-2xl p-5 sm:p-7 space-y-5">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-2 border-b border-slate-700">
+                <div>
+                    <h3 class="text-lg sm:text-xl font-black text-white flex items-center gap-2.5">
+                        <i class="fa-solid fa-ranking-star text-amber-400 text-xl"></i>
+                        <span>歷年詳細分數與「當年度組內排名」對照表</span>
+                    </h3>
+                    <p class="text-sm text-slate-300 font-medium mt-1">
+                        每格包含「<span class="text-white font-bold">平均分數</span>」及「<span class="text-amber-300 font-bold">該年度組內排名</span>」，點擊欄位標題可依該年度分數/排名由大到小排序
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-sm font-bold text-slate-300">
+                        共 <span id="tableRowCount" class="text-sky-300 font-black text-base">0</span> 個系組
+                    </span>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto custom-scroll rounded-xl border border-slate-700 shadow-xl">
+                <table class="min-w-full divide-y divide-slate-700 text-sm sm:text-base text-left text-slate-100" id="dataTable">
+                    <thead class="bg-[#090f1d] text-slate-200 font-extrabold uppercase tracking-wide">
+                        <tr>
+                            <th class="py-4 px-5 cursor-pointer hover:text-sky-300 transition text-sm sm:text-base" onclick="sortTable(0)">
+                                校系名稱 <i class="fa-solid fa-sort text-slate-400 ml-1"></i>
+                            </th>
+                            <th class="py-4 px-4 text-right cursor-pointer hover:text-sky-300 transition text-sm sm:text-base" onclick="sortTable(1)">
+                                111年 (分數/排名) <i class="fa-solid fa-sort text-slate-400 ml-1"></i>
+                            </th>
+                            <th class="py-4 px-4 text-right cursor-pointer hover:text-sky-300 transition text-sm sm:text-base" onclick="sortTable(2)">
+                                112年 (分數/排名) <i class="fa-solid fa-sort text-slate-400 ml-1"></i>
+                            </th>
+                            <th class="py-4 px-4 text-right cursor-pointer hover:text-sky-300 transition text-sm sm:text-base" onclick="sortTable(3)">
+                                113年 (分數/排名) <i class="fa-solid fa-sort text-slate-400 ml-1"></i>
+                            </th>
+                            <th class="py-4 px-4 text-right cursor-pointer hover:text-sky-300 transition text-sm sm:text-base" onclick="sortTable(4)">
+                                114年 (分數/排名) <i class="fa-solid fa-sort text-slate-400 ml-1"></i>
+                            </th>
+                            <th class="py-4 px-4 text-right cursor-pointer hover:text-sky-300 transition text-sm sm:text-base" onclick="sortTable(5)">
+                                115年 (分數/排名) <i class="fa-solid fa-sort text-slate-400 ml-1"></i>
+                            </th>
+                            <th class="py-4 px-4 text-right cursor-pointer hover:text-sky-300 transition text-sm sm:text-base" onclick="sortTable(6)">
+                                五年變化 (115 vs 111) <i class="fa-solid fa-sort text-slate-400 ml-1"></i>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-700/80 bg-[#0c1324]" id="tableBody">
+                        <!-- Dynamic Rows with High-Contrast Rank Badges -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-[96%] max-w-[2000px] mx-auto mt-12 text-center text-sm text-slate-400 font-medium">
+        <p>資料來源：大學部 111-115 學年度錄取平均分數彙整資料庫 · 採用 Apache ECharts 5 視覺化引擎</p>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        const rawData = {"醫學": [{"school": "中國醫藥大學", "dept": "醫學系", "fullName": "中國醫藥大學 醫學系", "isPublic": false, "scores": [53.0, 53.6, 54.6, 54.6, 53.0], "ranks": [6, 9, 8, 10, 13], "minScore": 53.0, "maxScore": 54.6, "diff": 0.0}, {"school": "中山醫學大學", "dept": "醫學系", "fullName": "中山醫學大學 醫學系", "isPublic": false, "scores": [51.2, 52.0, 52.8, 53.4, 52.0], "ranks": [14, 14, 15, 16, 16], "minScore": 51.2, "maxScore": 53.4, "diff": 0.8}, {"school": "國立成功大學", "dept": "醫學系", "fullName": "國立成功大學 醫學系", "isPublic": true, "scores": [54.2, 55.0, 56.0, 55.8, 55.2], "ranks": [5, 4, 4, 5, 4], "minScore": 54.2, "maxScore": 56.0, "diff": 1.0}, {"school": "國立臺灣大學", "dept": "醫學系", "fullName": "國立臺灣大學 醫學系", "isPublic": true, "scores": [56.0, 56.6, 57.4, 57.6, 57.0], "ranks": [1, 1, 1, 1, 1], "minScore": 56.0, "maxScore": 57.6, "diff": 1.0}, {"school": "國立陽明交通大學", "dept": "醫學系", "fullName": "國立陽明交通大學 醫學系", "isPublic": true, "scores": [54.4, 55.6, 56.8, 56.6, 55.8], "ranks": [4, 3, 2, 3, 3], "minScore": 54.4, "maxScore": 56.8, "diff": 1.4}, {"school": "慈濟大學", "dept": "醫學系", "fullName": "慈濟大學 醫學系", "isPublic": false, "scores": [50.75, 51.8, 52.6, 53.4, 51.8], "ranks": [17, 15, 17, 16, 18], "minScore": 50.75, "maxScore": 53.4, "diff": 1.05}, {"school": "臺北醫學大學", "dept": "醫學系", "fullName": "臺北醫學大學 醫學系", "isPublic": false, "scores": [54.6, 55.8, 54.8, 55.6, 54.2], "ranks": [2, 2, 6, 6, 7], "minScore": 54.2, "maxScore": 55.8, "diff": -0.4}, {"school": "輔仁大學", "dept": "醫學系", "fullName": "輔仁大學 醫學系", "isPublic": false, "scores": [52.0, 52.6, 53.6, 54.2, 53.0], "ranks": [12, 13, 12, 12, 13], "minScore": 52.0, "maxScore": 54.2, "diff": 1.0}, {"school": "長庚大學", "dept": "醫學系", "fullName": "長庚大學 醫學系", "isPublic": false, "scores": [53.0, 53.8, 54.6, 54.8, 53.8], "ranks": [6, 8, 8, 8, 9], "minScore": 53.0, "maxScore": 54.8, "diff": 0.8}, {"school": "馬偕醫學大學", "dept": "醫學系", "fullName": "馬偕醫學大學 醫學系", "isPublic": false, "scores": [52.8, 55.0, 53.8, 54.0, 52.8], "ranks": [9, 4, 11, 15, 15], "minScore": 52.8, "maxScore": 55.0, "diff": 0.0}, {"school": "高雄醫學大學", "dept": "醫學系", "fullName": "高雄醫學大學 醫學系", "isPublic": false, "scores": [52.2, 52.8, 53.6, 54.2, 53.2], "ranks": [10, 12, 12, 12, 11], "minScore": 52.2, "maxScore": 54.2, "diff": 1.0}, {"school": "中國醫藥大學", "dept": "牙醫學系", "fullName": "中國醫藥大學 牙醫學系", "isPublic": false, "scores": [50.8, 51.6, 52.8, 54.24, 53.05], "ranks": [15, 17, 15, 11, 12], "minScore": 50.8, "maxScore": 54.24, "diff": 2.25}, {"school": "中山醫學大學", "dept": "牙醫學系", "fullName": "中山醫學大學 牙醫學系", "isPublic": false, "scores": [49.53, 51.43, 52.43, 53.38, 51.95], "ranks": [18, 18, 18, 18, 17], "minScore": 49.53, "maxScore": 53.38, "diff": 2.42}, {"school": "國立成功大學", "dept": "牙醫學系", "fullName": "國立成功大學 牙醫學系", "isPublic": true, "scores": [51.8, 53.0, 54.2, 54.8, 54.0], "ranks": [13, 11, 10, 8, 8], "minScore": 51.8, "maxScore": 54.8, "diff": 2.2}, {"school": "國立臺灣大學", "dept": "牙醫學系", "fullName": "國立臺灣大學 牙醫學系", "isPublic": true, "scores": [54.6, 55.0, 56.6, 57.0, 56.0], "ranks": [2, 4, 3, 2, 2], "minScore": 54.6, "maxScore": 57.0, "diff": 1.4}, {"school": "國立陽明交通大學", "dept": "牙醫學系", "fullName": "國立陽明交通大學 牙醫學系", "isPublic": true, "scores": [53.0, 54.2, 55.0, 56.0, 55.2], "ranks": [6, 7, 5, 4, 4], "minScore": 53.0, "maxScore": 56.0, "diff": 2.2}, {"school": "臺北醫學大學", "dept": "牙醫學系", "fullName": "臺北醫學大學 牙醫學系", "isPublic": false, "scores": [52.2, 53.4, 54.8, 55.2, 54.6], "ranks": [10, 10, 6, 7, 6], "minScore": 52.2, "maxScore": 55.2, "diff": 2.4}, {"school": "高雄醫學大學", "dept": "牙醫學系", "fullName": "高雄醫學大學 牙醫學系", "isPublic": false, "scores": [50.8, 51.8, 53.2, 54.2, 53.4], "ranks": [15, 15, 14, 12, 10], "minScore": 50.8, "maxScore": 54.2, "diff": 2.6}], "護理": [{"school": "中國醫藥大學", "dept": "護理學系", "fullName": "中國醫藥大學 護理學系", "isPublic": false, "scores": [23.25, 40.0, 42.0, 42.33, 42.67], "ranks": [6, 5, 5, 5, 5], "minScore": 23.25, "maxScore": 42.67, "diff": 19.42}, {"school": "中山醫學大學", "dept": "護理學系", "fullName": "中山醫學大學 護理學系", "isPublic": false, "scores": [19.53, 31.5, 33.25, 32.75, 30.5], "ranks": [11, 10, 9, 11, 11], "minScore": 19.53, "maxScore": 33.25, "diff": 10.97}, {"school": "亞洲大學", "dept": "護理學系(國際護理組)", "fullName": "亞洲大學 護理學系(國際護理組)", "isPublic": false, "scores": [12.67, 20.14, 20.86, 26.45, 21.64], "ranks": [18, 16, 20, 16, 17], "minScore": 12.67, "maxScore": 26.45, "diff": 8.97}, {"school": "亞洲大學", "dept": "護理學系(智慧護理組)", "fullName": "亞洲大學 護理學系(智慧護理組)", "isPublic": false, "scores": [null, null, null, 34.45, 31.45], "ranks": [null, null, null, 10, 10], "minScore": 31.45, "maxScore": 34.45, "diff": null}, {"school": "亞洲大學", "dept": "護理學系(臨床照護組)", "fullName": "亞洲大學 護理學系(臨床照護組)", "isPublic": false, "scores": [15.75, 24.33, 28.38, 29.82, 22.91], "ranks": [16, 15, 16, 15, 16], "minScore": 15.75, "maxScore": 29.82, "diff": 7.16}, {"school": "亞洲大學", "dept": "護理學系(銀髮智慧照護組)", "fullName": "亞洲大學 護理學系(銀髮智慧照護組)", "isPublic": false, "scores": [null, null, 32.57, null, null], "ranks": [null, null, 10, null, null], "minScore": 32.57, "maxScore": 32.57, "diff": null}, {"school": "亞洲大學", "dept": "護理學系(高齡長期照護組)", "fullName": "亞洲大學 護理學系(高齡長期照護組)", "isPublic": false, "scores": [20.75, 27.0, null, null, null], "ranks": [10, 14, null, null, null], "minScore": 20.75, "maxScore": 27.0, "diff": null}, {"school": "元智大學", "dept": "護理學系", "fullName": "元智大學 護理學系", "isPublic": false, "scores": [null, null, 31.0, 31.33, 26.0], "ranks": [null, null, 13, 13, 13], "minScore": 26.0, "maxScore": 31.33, "diff": null}, {"school": "國立中山大學", "dept": "護理學系", "fullName": "國立中山大學 護理學系", "isPublic": true, "scores": [null, null, null, 40.08, 37.17], "ranks": [null, null, null, 7, 8], "minScore": 37.17, "maxScore": 40.08, "diff": null}, {"school": "國立成功大學", "dept": "護理學系", "fullName": "國立成功大學 護理學系", "isPublic": true, "scores": [41.92, 43.25, 44.42, 47.6, 46.8], "ranks": [2, 3, 3, 2, 2], "minScore": 41.92, "maxScore": 47.6, "diff": 4.88}, {"school": "國立暨南國際大學", "dept": "護理學系", "fullName": "國立暨南國際大學 護理學系", "isPublic": true, "scores": [null, 34.95, 32.37, 32.62, 24.88], "ranks": [null, 8, 11, 12, 15], "minScore": 24.88, "maxScore": 34.95, "diff": null}, {"school": "國立臺東大學", "dept": "護理學系", "fullName": "國立臺東大學 護理學系", "isPublic": true, "scores": [null, null, null, null, 29.56], "ranks": [null, null, null, null, 12], "minScore": 29.56, "maxScore": 29.56, "diff": null}, {"school": "國立臺灣大學", "dept": "護理學系", "fullName": "國立臺灣大學 護理學系", "isPublic": true, "scores": [44.8, 46.2, 48.2, 48.0, 45.4], "ranks": [1, 1, 1, 1, 4], "minScore": 44.8, "maxScore": 48.2, "diff": 0.6}, {"school": "國立金門大學", "dept": "護理學系", "fullName": "國立金門大學 護理學系", "isPublic": true, "scores": [21.8, 29.56, null, null, null], "ranks": [9, 11, null, null, null], "minScore": 21.8, "maxScore": 29.56, "diff": null}, {"school": "國立金門大學", "dept": "護理學系(A組)", "fullName": "國立金門大學 護理學系(A組)", "isPublic": true, "scores": [null, null, 31.22, 26.22, 20.89], "ranks": [null, null, 12, 17, 18], "minScore": 20.89, "maxScore": 31.22, "diff": null}, {"school": "國立金門大學", "dept": "護理學系(B組)", "fullName": "國立金門大學 護理學系(B組)", "isPublic": true, "scores": [null, null, 23.67, 25.11, 18.67], "ranks": [null, null, 19, 19, 20], "minScore": 18.67, "maxScore": 25.11, "diff": null}, {"school": "國立陽明交通大學", "dept": "護理學系", "fullName": "國立陽明交通大學 護理學系", "isPublic": true, "scores": [41.73, 43.27, 45.36, 46.0, 47.89], "ranks": [3, 2, 2, 3, 1], "minScore": 41.73, "maxScore": 47.89, "diff": 6.16}, {"school": "大葉大學", "dept": "護理學系", "fullName": "大葉大學 護理學系", "isPublic": false, "scores": [19.52, 20.0, null, 15.43, 16.61], "ranks": [12, 17, null, 22, 21], "minScore": 15.43, "maxScore": 20.0, "diff": -2.91}, {"school": "大葉大學", "dept": "護理學系(國際組)", "fullName": "大葉大學 護理學系(國際組)", "isPublic": false, "scores": [null, null, 16.87, null, null], "ranks": [null, null, 21, null, null], "minScore": 16.87, "maxScore": 16.87, "diff": null}, {"school": "大葉大學", "dept": "護理學系(臨床組)", "fullName": "大葉大學 護理學系(臨床組)", "isPublic": false, "scores": [null, null, 24.87, null, null], "ranks": [null, null, 18, null, null], "minScore": 24.87, "maxScore": 24.87, "diff": null}, {"school": "慈濟大學", "dept": "護理學系", "fullName": "慈濟大學 護理學系", "isPublic": false, "scores": [13.67, 27.4, 29.0, 15.6, 16.6], "ranks": [17, 13, 15, 21, 22], "minScore": 13.67, "maxScore": 29.0, "diff": 2.93}, {"school": "義守大學", "dept": "護理學系", "fullName": "義守大學 護理學系", "isPublic": false, "scores": [18.0, 15.2, 26.22, 25.78, 18.96], "ranks": [14, 19, 17, 18, 19], "minScore": 15.2, "maxScore": 26.22, "diff": 0.96}, {"school": "臺北醫學大學", "dept": "護理學系", "fullName": "臺北醫學大學 護理學系", "isPublic": false, "scores": [34.76, 42.4, 43.8, 43.9, 46.75], "ranks": [4, 4, 4, 4, 3], "minScore": 34.76, "maxScore": 46.75, "diff": 11.99}, {"school": "輔仁大學", "dept": "護理學系", "fullName": "輔仁大學 護理學系", "isPublic": false, "scores": [16.14, 31.9, 35.0, 34.88, 34.12], "ranks": [15, 9, 8, 9, 9], "minScore": 16.14, "maxScore": 35.0, "diff": 17.98}, {"school": "長庚大學", "dept": "護理學系", "fullName": "長庚大學 護理學系", "isPublic": false, "scores": [24.2, 38.2, 40.0, 40.88, 38.38], "ranks": [5, 6, 6, 6, 7], "minScore": 24.2, "maxScore": 40.88, "diff": 14.18}, {"school": "長榮大學", "dept": "護理學系", "fullName": "長榮大學 護理學系", "isPublic": false, "scores": [23.09, 16.45, 16.18, 19.64, 15.36], "ranks": [7, 18, 22, 20, 23], "minScore": 15.36, "maxScore": 23.09, "diff": -7.73}, {"school": "馬偕醫學大學", "dept": "護理學系", "fullName": "馬偕醫學大學 護理學系", "isPublic": false, "scores": [18.18, 29.55, 30.91, 30.55, 25.0], "ranks": [13, 12, 14, 14, 14], "minScore": 18.18, "maxScore": 30.91, "diff": 6.82}, {"school": "高雄醫學大學", "dept": "護理學系", "fullName": "高雄醫學大學 護理學系", "isPublic": false, "scores": [22.2, 36.6, 37.48, 37.6, 39.75], "ranks": [8, 7, 7, 8, 6], "minScore": 22.2, "maxScore": 39.75, "diff": 17.55}], "聽語": [{"school": "亞洲大學", "dept": "聽力暨語言治療學系", "fullName": "亞洲大學 聽力暨語言治療學系", "isPublic": false, "scores": [35.0, 34.8, 41.6, 41.6, 41.8], "ranks": [1, 5, 2, 2, 2], "minScore": 34.8, "maxScore": 41.8, "diff": 6.8}, {"school": "馬偕醫學大學", "dept": "聽力暨語言治療學系聽力組", "fullName": "馬偕醫學大學 聽力暨語言治療學系聽力組", "isPublic": false, "scores": [29.67, 36.08, 36.77, 33.85, 33.18], "ranks": [4, 4, 5, 5, 5], "minScore": 29.67, "maxScore": 36.77, "diff": 3.51}, {"school": "馬偕醫學大學", "dept": "聽力暨語言治療學系語言組", "fullName": "馬偕醫學大學 聽力暨語言治療學系語言組", "isPublic": false, "scores": [33.62, 40.54, 41.04, 38.67, 38.5], "ranks": [2, 2, 3, 4, 3], "minScore": 33.62, "maxScore": 41.04, "diff": 4.88}, {"school": "中山醫學大學", "dept": "語言治療與聽力學系聽力組", "fullName": "中山醫學大學 語言治療與聽力學系聽力組", "isPublic": false, "scores": [22.17, 37.58, 39.33, 39.08, 37.33], "ranks": [5, 3, 4, 3, 4], "minScore": 22.17, "maxScore": 39.33, "diff": 15.16}, {"school": "中山醫學大學", "dept": "語言治療與聽力學系語言治療組", "fullName": "中山醫學大學 語言治療與聽力學系語言治療組", "isPublic": false, "scores": [30.5, 42.17, 43.67, 43.08, 44.0], "ranks": [3, 1, 1, 1, 1], "minScore": 30.5, "maxScore": 44.0, "diff": 13.5}], "視光": [{"school": "中山醫學大學", "dept": "視光學系", "fullName": "中山醫學大學 視光學系", "isPublic": false, "scores": [22.11, 34.33, 37.11, 36.78, 35.22], "ranks": [1, 1, 1, 2, 1], "minScore": 22.11, "maxScore": 37.11, "diff": 13.11}, {"school": "亞洲大學", "dept": "視光學系", "fullName": "亞洲大學 視光學系", "isPublic": false, "scores": [19.86, 31.43, 36.3, 38.3, 32.2], "ranks": [2, 3, 2, 1, 2], "minScore": 19.86, "maxScore": 38.3, "diff": 12.34}, {"school": "大葉大學", "dept": "視光學系", "fullName": "大葉大學 視光學系", "isPublic": false, "scores": [null, 15.2, 15.48, 12.87, 15.04], "ranks": [null, 4, 4, 4, 4], "minScore": 12.87, "maxScore": 15.48, "diff": null}, {"school": "馬偕醫學大學", "dept": "視光學系", "fullName": "馬偕醫學大學 視光學系", "isPublic": false, "scores": [null, 31.91, 32.57, 32.86, 29.48], "ranks": [null, 2, 3, 3, 3], "minScore": 29.48, "maxScore": 32.86, "diff": null}], "醫檢": [{"school": "中國醫藥大學", "dept": "醫學檢驗生物技術學系", "fullName": "中國醫藥大學 醫學檢驗生物技術學系", "isPublic": false, "scores": [40.71, 43.21, 46.79, 47.71, 45.57], "ranks": [4, 5, 4, 3, 5], "minScore": 40.71, "maxScore": 47.71, "diff": 4.86}, {"school": "中山醫學大學", "dept": "醫學檢驗暨生物技術學系", "fullName": "中山醫學大學 醫學檢驗暨生物技術學系", "isPublic": false, "scores": [36.0, 41.25, 44.0, 43.0, 41.0], "ranks": [6, 6, 6, 6, 7], "minScore": 36.0, "maxScore": 44.0, "diff": 5.0}, {"school": "亞洲大學", "dept": "醫學檢驗暨生物技術學系(生物技術組)", "fullName": "亞洲大學 醫學檢驗暨生物技術學系(生物技術組)", "isPublic": false, "scores": [27.36, 34.36, 37.18, 39.27, 37.73], "ranks": [8, 7, 8, 8, 8], "minScore": 27.36, "maxScore": 39.27, "diff": 10.37}, {"school": "亞洲大學", "dept": "醫學檢驗暨生物技術學系(醫事檢驗組)", "fullName": "亞洲大學 醫學檢驗暨生物技術學系(醫事檢驗組)", "isPublic": false, "scores": [32.92, 33.38, 36.23, 38.67, 35.5], "ranks": [7, 8, 10, 9, 9], "minScore": 32.92, "maxScore": 38.67, "diff": 2.58}, {"school": "國立成功大學", "dept": "醫學檢驗生物技術學系", "fullName": "國立成功大學 醫學檢驗生物技術學系", "isPublic": true, "scores": [45.04, 46.26, 48.13, 47.43, 46.57], "ranks": [3, 3, 3, 4, 3], "minScore": 45.04, "maxScore": 48.13, "diff": 1.53}, {"school": "國立臺灣大學", "dept": "醫學檢驗暨生物技術學系", "fullName": "國立臺灣大學 醫學檢驗暨生物技術學系", "isPublic": true, "scores": [48.2, 48.6, 50.8, 51.0, 49.4], "ranks": [1, 1, 1, 1, 1], "minScore": 48.2, "maxScore": 51.0, "diff": 1.2}, {"school": "慈濟大學", "dept": "醫學檢驗生物技術學系", "fullName": "慈濟大學 醫學檢驗生物技術學系", "isPublic": false, "scores": [16.75, 33.25, 36.75, 37.75, 33.0], "ranks": [10, 9, 9, 10, 10], "minScore": 16.75, "maxScore": 37.75, "diff": 16.25}, {"school": "義守大學", "dept": "醫學檢驗技術學系", "fullName": "義守大學 醫學檢驗技術學系", "isPublic": false, "scores": [17.86, 27.14, 34.0, 33.29, 30.0], "ranks": [9, 10, 11, 11, 11], "minScore": 17.86, "maxScore": 34.0, "diff": 12.14}, {"school": "臺北醫學大學", "dept": "醫學檢驗暨生物技術學系", "fullName": "臺北醫學大學 醫學檢驗暨生物技術學系", "isPublic": false, "scores": [45.73, 47.36, 49.18, 49.64, 48.09], "ranks": [2, 2, 2, 2, 2], "minScore": 45.73, "maxScore": 49.64, "diff": 2.36}, {"school": "馬偕醫學大學", "dept": "醫學檢驗暨再生醫學學系", "fullName": "馬偕醫學大學 醫學檢驗暨再生醫學學系", "isPublic": false, "scores": [null, null, 43.3, 43.0, 43.1], "ranks": [null, null, 7, 6, 6], "minScore": 43.0, "maxScore": 43.3, "diff": null}, {"school": "高雄醫學大學", "dept": "醫學檢驗生物技術學系", "fullName": "高雄醫學大學 醫學檢驗生物技術學系", "isPublic": false, "scores": [40.0, 45.75, 46.25, 46.0, 45.62], "ranks": [5, 4, 5, 5, 4], "minScore": 40.0, "maxScore": 46.25, "diff": 5.62}]};
+        const groups = Object.keys(rawData);
+        let currentGroup = groups[0];
+        let isSmooth = true;
+        let chartInstance = null;
+        let currentSortCol = 5; // Default sort by 115 score
+        let currentSortAsc = false;
+
+        let selectionState = {};
+
+        // Vivid high-contrast color palette for lines
+        const colorPalette = [
+            '#38bdf8', '#818cf8', '#fb7185', '#34d399', '#facc15',
+            '#a78bfa', '#f472b6', '#4ade80', '#f87171', '#2dd4bf',
+            '#60a5fa', '#c084fc', '#fbbf24', '#22d3ee', '#fb923c',
+            '#e879f9', '#a3e635', '#93c5fd', '#fda4af', '#86efac',
+            '#fed7aa', '#ddd6fe', '#cbd5e1', '#67e8f9', '#fca5a5',
+            '#d8b4fe', '#fde047', '#5eead4'
+        ];
+
+        const groupMeta = {
+            '醫學': { icon: 'fa-user-md', badge: 'bg-blue-500/20 text-sky-300 border-blue-400/50' },
+            '護理': { icon: 'fa-user-nurse', badge: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/50' },
+            '聽語': { icon: 'fa-ear-listen', badge: 'bg-amber-500/20 text-amber-300 border-amber-400/50' },
+            '視光': { icon: 'fa-eye', badge: 'bg-purple-500/20 text-purple-300 border-purple-400/50' },
+            '醫檢': { icon: 'fa-flask-vial', badge: 'bg-rose-500/20 text-rose-300 border-rose-400/50' }
+        };
+
+        function initTabs() {
+            const container = document.getElementById('groupTabs');
+            container.innerHTML = groups.map(g => `
+                <button onclick="switchGroup('${g}')" 
+                    id="tab-${g}"
+                    class="tab-btn px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-sm sm:text-base font-bold text-slate-300 hover:text-white transition flex items-center gap-2 border border-transparent ${g === currentGroup ? 'active' : ''}">
+                    <i class="fa-solid ${groupMeta[g]?.icon || 'fa-folder'} text-sm"></i>
+                    <span>${g} (${rawData[g].length})</span>
+                </button>
+            `).join('');
+        }
+
+        function switchGroup(group) {
+            currentGroup = group;
+            
+            const items = rawData[group];
+            selectionState = {};
+            
+            if (items.length > 18) {
+                const sorted = [...items].sort((a, b) => (b.scores[4] ?? 0) - (a.scores[4] ?? 0));
+                items.forEach((item, idx) => {
+                    selectionState[item.fullName] = idx < 10;
+                });
+            } else {
+                items.forEach(item => {
+                    selectionState[item.fullName] = true;
+                });
+            }
+
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab-${group}`).classList.add('active');
+            
+            const meta = groupMeta[group];
+            const badge = document.getElementById('groupBadge');
+            badge.className = `px-3.5 py-1 text-sm font-black rounded-full border ${meta.badge}`;
+            badge.innerText = `${group}組`;
+            document.getElementById('chartTitle').innerText = `${group}組 歷年平均錄取分數走勢比較 (111 - 115 年)`;
+
+            updateKPIs();
+            renderSidebar();
+            renderChart();
+            renderTable();
+            document.getElementById('sideSearchInput').value = '';
+        }
+
+        function updateKPIs() {
+            const items = rawData[currentGroup];
+            const kpi = document.getElementById('kpiContainer');
+            const count = items.length;
+            
+            let max115 = -1, max115School = '';
+            let highestEver = -1, highestEverSchool = '', highestEverYear = '';
+            let topGrow = -999, topGrowSchool = '';
+
+            items.forEach(item => {
+                const s115 = item.scores[4];
+                if (s115 !== null && s115 > max115) { max115 = s115; max115School = item.fullName; }
+                item.scores.forEach((sc, yIdx) => {
+                    if (sc !== null && sc > highestEver) {
+                        highestEver = sc;
+                        highestEverSchool = item.fullName;
+                        highestEverYear = 111 + yIdx + '年';
+                    }
+                });
+                if (item.diff !== null && item.diff > topGrow) {
+                    topGrow = item.diff;
+                    topGrowSchool = item.fullName;
+                }
+            });
+
+            kpi.innerHTML = `
+                <div class="glass-card rounded-2xl p-5 flex items-center space-x-4 border border-slate-700">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-sky-400 text-2xl shrink-0">
+                        <i class="fa-solid fa-university"></i>
+                    </div>
+                    <div>
+                        <div class="text-sm text-slate-300 font-bold">納入系組總數</div>
+                        <div class="text-3xl font-black text-white mt-1">${count} <span class="text-sm text-slate-300 font-semibold">個校系</span></div>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 flex items-center space-x-4 border border-slate-700">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-2xl shrink-0">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <div class="text-sm text-slate-300 font-bold">115年度榜首系組</div>
+                        <div class="text-2xl font-black text-emerald-300 truncate mt-1">${max115 > 0 ? max115 + ' 分' : '無資料'}</div>
+                        <div class="text-xs sm:text-sm text-slate-300 font-semibold truncate mt-0.5">${max115School}</div>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 flex items-center space-x-4 border border-slate-700">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-400 text-2xl shrink-0">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <div class="text-sm text-slate-300 font-bold">歷年最高峰紀錄</div>
+                        <div class="text-2xl font-black text-amber-300 truncate mt-1">${highestEver > 0 ? highestEver + ' 分 (' + highestEverYear + ')' : '無資料'}</div>
+                        <div class="text-xs sm:text-sm text-slate-300 font-semibold truncate mt-0.5">${highestEverSchool}</div>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 flex items-center space-x-4 border border-slate-700">
+                    <div class="w-14 h-14 rounded-2xl bg-purple-500/20 border border-purple-400/30 flex items-center justify-center text-purple-400 text-2xl shrink-0">
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <div class="text-sm text-slate-300 font-bold">五年累計成長最高</div>
+                        <div class="text-2xl font-black text-purple-300 truncate mt-1">${topGrow > -900 ? (topGrow > 0 ? '+' + topGrow : topGrow) + ' 分' : '無'}</div>
+                        <div class="text-xs sm:text-sm text-slate-300 font-semibold truncate mt-0.5">${topGrowSchool}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSidebar(searchKeyword = '') {
+            const items = rawData[currentGroup];
+            const container = document.getElementById('schoolChecklist');
+            
+            let filteredItems = items;
+            if (searchKeyword) {
+                const kw = searchKeyword.toLowerCase();
+                filteredItems = items.filter(it => it.fullName.toLowerCase().includes(kw));
+            }
+
+            const selectedCount = items.filter(it => selectionState[it.fullName]).length;
+            document.getElementById('selectedCountBadge').innerText = selectedCount;
+            document.getElementById('totalCountBadge').innerText = items.length;
+
+            container.innerHTML = filteredItems.map((item) => {
+                const isChecked = !!selectionState[item.fullName];
+                const origIndex = items.findIndex(it => it.fullName === item.fullName);
+                const color = colorPalette[origIndex % colorPalette.length];
+                const s115 = item.scores[4];
+                const r115 = item.ranks[4];
+
+                return `
+                    <label class="flex items-center justify-between p-2.5 rounded-xl bg-[#090f1d] hover:bg-[#16233d] cursor-pointer border ${isChecked ? 'border-sky-500/80 bg-[#16233d]' : 'border-slate-800'} transition text-sm shadow-sm">
+                        <div class="flex items-center space-x-3 min-w-0 flex-1">
+                            <input type="checkbox" 
+                                onchange="toggleItem('${item.fullName}')" 
+                                ${isChecked ? 'checked' : ''}
+                                class="w-4 h-4 rounded border-slate-500 text-blue-600 focus:ring-0 bg-[#070b14]">
+                            <span class="w-3 h-3 rounded-full shrink-0 shadow" style="background-color: ${color}"></span>
+                            <span class="truncate font-semibold ${isChecked ? 'text-white' : 'text-slate-400'}">${item.fullName}</span>
+                        </div>
+                        <div class="text-right shrink-0 ml-2">
+                            <span class="font-mono font-bold ${s115 ? 'text-amber-300' : 'text-slate-500'} text-sm">${s115 !== null ? s115.toFixed(1) : '-'}</span>
+                            ${r115 ? `<span class="text-xs font-black text-sky-400 bg-blue-950/80 px-1.5 py-0.5 rounded border border-blue-800 ml-1">#${r115}</span>` : ''}
+                        </div>
+                    </label>
+                `;
+            }).join('');
+        }
+
+        function toggleItem(fullName) {
+            selectionState[fullName] = !selectionState[fullName];
+            renderSidebar(document.getElementById('sideSearchInput').value.trim());
+            updateChartSelection();
+        }
+
+        function applyPreset(type) {
+            const items = rawData[currentGroup];
+            if (type === 'all') {
+                items.forEach(it => selectionState[it.fullName] = true);
+            } else if (type === 'none') {
+                items.forEach(it => selectionState[it.fullName] = false);
+            } else if (type === 'top5') {
+                const sorted = [...items].sort((a, b) => (b.scores[4] ?? 0) - (a.scores[4] ?? 0));
+                items.forEach(it => selectionState[it.fullName] = false);
+                sorted.slice(0, 5).forEach(it => selectionState[it.fullName] = true);
+            } else if (type === 'public') {
+                items.forEach(it => selectionState[it.fullName] = it.isPublic);
+            }
+            
+            renderSidebar(document.getElementById('sideSearchInput').value.trim());
+            updateChartSelection();
+        }
+
+        function updateChartSelection() {
+            if (!chartInstance) return;
+            const items = rawData[currentGroup];
+            const legendSelected = {};
+            items.forEach(it => {
+                legendSelected[it.fullName] = !!selectionState[it.fullName];
+            });
+            chartInstance.setOption({
+                legend: { selected: legendSelected }
+            });
+        }
+
+        function renderChart() {
+            const chartDom = document.getElementById('mainChart');
+            if (!chartInstance) {
+                chartInstance = echarts.init(chartDom);
+                window.addEventListener('resize', () => chartInstance.resize());
+                
+                chartInstance.on('legendselectchanged', function(params) {
+                    selectionState = { ...params.selected };
+                    renderSidebar(document.getElementById('sideSearchInput').value.trim());
+                });
+            }
+
+            const items = rawData[currentGroup];
+            const legendSelected = {};
+            items.forEach(it => {
+                legendSelected[it.fullName] = !!selectionState[it.fullName];
+            });
+
+            const seriesList = items.map((item, idx) => ({
+                name: item.fullName,
+                type: 'line',
+                smooth: isSmooth,
+                data: item.scores,
+                symbol: 'circle',
+                symbolSize: 9,
+                color: colorPalette[idx % colorPalette.length],
+                lineStyle: {
+                    width: 3.2
+                },
+                emphasis: {
+                    focus: 'series',
+                    lineStyle: {
+                        width: 5.5
+                    }
+                }
+            }));
+
+            let allScores = [];
+            items.forEach(it => {
+                it.scores.forEach(s => {
+                    if (s !== null) allScores.push(s);
+                });
+            });
+            const yMin = allScores.length ? Math.floor(Math.min(...allScores) - 2) : 0;
+            const yMax = allScores.length ? Math.ceil(Math.max(...allScores) + 2) : 60;
+
+            const option = {
+                backgroundColor: 'transparent',
+                color: colorPalette,
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: 'rgba(6, 11, 20, 0.96)',
+                    borderColor: '#475569',
+                    borderWidth: 1.5,
+                    textStyle: { color: '#ffffff', fontSize: 14 },
+                    axisPointer: {
+                        type: 'cross',
+                        crossStyle: { color: '#94a3b8' }
+                    },
+                    formatter: function(params) {
+                        if (!params || params.length === 0) return '';
+                        const yearIndex = ['111年', '112年', '113年', '114年', '115年'].indexOf(params[0].axisValue);
+                        let header = `<div class="font-bold border-b border-slate-700 pb-2 mb-2 text-sky-300 flex items-center justify-between text-sm sm:text-base">
+                            <span>${params[0].axisValue} 各校系平均錄取分數</span>
+                            <span class="text-xs text-slate-300 font-normal">依當年度分數排序</span>
+                        </div>`;
+                        
+                        const sorted = [...params].filter(p => p.value !== null && p.value !== undefined).sort((a, b) => b.value - a.value);
+                        let body = sorted.map((p, idx) => {
+                            const item = items.find(it => it.fullName === p.seriesName);
+                            const rank = item && item.ranks && yearIndex >= 0 ? item.ranks[yearIndex] : (idx + 1);
+                            
+                            let rankBadgeClass = 'rank-badge-other';
+                            if (rank === 1) rankBadgeClass = 'rank-badge-1';
+                            else if (rank === 2) rankBadgeClass = 'rank-badge-2';
+                            else if (rank === 3) rankBadgeClass = 'rank-badge-3';
+
+                            return `
+                                <div class="flex items-center justify-between gap-6 py-1.5 border-b border-slate-800/80">
+                                    <span class="flex items-center gap-2.5">
+                                        <span class="px-2 py-0.5 rounded text-xs font-black ${rankBadgeClass}">#${rank}</span>
+                                        <span class="w-3 h-3 rounded-full" style="background-color: ${p.color}"></span>
+                                        <span class="text-white text-sm font-semibold">${p.seriesName}</span>
+                                    </span>
+                                    <span class="font-bold font-mono text-sm text-amber-300">${p.value.toFixed(2)} 分</span>
+                                </div>
+                            `;
+                        }).join('');
+                        return `<div class="max-h-96 overflow-y-auto custom-scroll pr-2">${header}${body}</div>`;
+                    }
+                },
+                legend: {
+                    show: false
+                },
+                grid: {
+                    left: '2%',
+                    right: '3%',
+                    bottom: '10%',
+                    top: '8%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        dataZoom: { yAxisIndex: 'none', title: { zoom: '區域縮放', back: '還原縮放' } },
+                        restore: { title: '重設' },
+                        saveAsImage: { title: '儲存為圖片', pixelRatio: 2 }
+                    },
+                    iconStyle: {
+                        borderColor: '#cbd5e1'
+                    },
+                    right: 15,
+                    top: 0
+                },
+                dataZoom: [
+                    {
+                        type: 'inside',
+                        start: 0,
+                        end: 100
+                    },
+                    {
+                        type: 'slider',
+                        bottom: 8,
+                        height: 20,
+                        borderColor: '#334155',
+                        fillerColor: 'rgba(59, 130, 246, 0.3)',
+                        handleStyle: { color: '#3b82f6' },
+                        textStyle: { color: '#cbd5e1' }
+                    }
+                ],
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['111年', '112年', '113年', '114年', '115年'],
+                    axisLine: { lineStyle: { color: '#64748b' } },
+                    axisLabel: { color: '#ffffff', fontSize: 14, fontWeight: 'bold' }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '平均錄取分數',
+                    nameTextStyle: { color: '#38bdf8', fontSize: 13, fontWeight: 'bold', padding: [0, 0, 8, 0] },
+                    min: yMin > 0 ? yMin : 0,
+                    max: yMax,
+                    splitLine: { lineStyle: { color: '#1e293b', type: 'dashed' } },
+                    axisLine: { lineStyle: { color: '#64748b' } },
+                    axisLabel: { color: '#ffffff', fontSize: 13, fontWeight: 'bold' }
+                },
+                series: seriesList
+            };
+
+            chartInstance.setOption(option, true);
+            updateChartSelection();
+        }
+
+        function getRankBadgeHtml(rank) {
+            if (!rank) return '<span class="text-slate-500 font-mono text-sm">-</span>';
+            let badgeClass = 'rank-badge-other';
+            if (rank === 1) badgeClass = 'rank-badge-1';
+            else if (rank === 2) badgeClass = 'rank-badge-2';
+            else if (rank === 3) badgeClass = 'rank-badge-3';
+            return `<span class="px-2 py-0.5 rounded text-xs font-black ${badgeClass} ml-1.5 shadow">#${rank}</span>`;
+        }
+
+        function renderTable() {
+            let items = [...rawData[currentGroup]];
+
+            document.getElementById('tableRowCount').innerText = items.length;
+
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = items.map((item, idx) => {
+                const s = item.scores;
+                const r = item.ranks;
+                const isChecked = !!selectionState[item.fullName];
+
+                const diffDisplay = item.diff !== null ? 
+                    (item.diff > 0 ? `<span class="text-emerald-300 font-black font-mono text-base">+${item.diff.toFixed(2)}</span>` :
+                     item.diff < 0 ? `<span class="text-rose-400 font-black font-mono text-base">${item.diff.toFixed(2)}</span>` : 
+                     `<span class="text-slate-300 font-mono">0.00</span>`) :
+                    `<span class="text-slate-500">-</span>`;
+
+                const rowBg = idx % 2 === 1 ? 'bg-[#0f172a]' : 'bg-[#0a101f]';
+
+                return `
+                    <tr class="hover:bg-[#1a2847] transition border-b border-slate-700/60 ${rowBg} ${isChecked ? '' : 'opacity-65'}">
+                        <td class="py-4 px-5 font-bold text-white flex items-center justify-between gap-3 text-sm sm:text-base">
+                            <span class="flex items-center gap-2.5">
+                                <span class="w-2.5 h-2.5 rounded-full ${isChecked ? 'bg-sky-400 ring-4 ring-sky-400/20' : 'bg-slate-600'}"></span>
+                                <span class="${isChecked ? 'text-white' : 'text-slate-300'}">${item.fullName}</span>
+                            </span>
+                            ${item.isPublic ? '<span class="px-2 py-0.5 text-xs bg-sky-500/20 text-sky-300 font-bold rounded-md border border-sky-400/40">公立</span>' : ''}
+                        </td>
+                        <td class="py-4 px-4 text-right font-mono font-semibold text-sm sm:text-base">
+                            ${s[0] !== null ? `<span class="text-white">${s[0].toFixed(2)}</span> ${getRankBadgeHtml(r[0])}` : '<span class="text-slate-500 font-normal">未採計</span>'}
+                        </td>
+                        <td class="py-4 px-4 text-right font-mono font-semibold text-sm sm:text-base">
+                            ${s[1] !== null ? `<span class="text-white">${s[1].toFixed(2)}</span> ${getRankBadgeHtml(r[1])}` : '<span class="text-slate-500 font-normal">未採計</span>'}
+                        </td>
+                        <td class="py-4 px-4 text-right font-mono font-semibold text-sm sm:text-base">
+                            ${s[2] !== null ? `<span class="text-white">${s[2].toFixed(2)}</span> ${getRankBadgeHtml(r[2])}` : '<span class="text-slate-500 font-normal">未採計</span>'}
+                        </td>
+                        <td class="py-4 px-4 text-right font-mono font-semibold text-sm sm:text-base">
+                            ${s[3] !== null ? `<span class="text-white">${s[3].toFixed(2)}</span> ${getRankBadgeHtml(r[3])}` : '<span class="text-slate-500 font-normal">未採計</span>'}
+                        </td>
+                        <td class="py-4 px-4 text-right font-mono font-black text-sm sm:text-base">
+                            ${s[4] !== null ? `<span class="text-amber-300">${s[4].toFixed(2)}</span> ${getRankBadgeHtml(r[4])}` : '<span class="text-slate-500 font-normal">未採計</span>'}
+                        </td>
+                        <td class="py-4 px-4 text-right">${diffDisplay}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        document.getElementById('sideSearchInput').addEventListener('input', (e) => {
+            renderSidebar(e.target.value.trim());
+        });
+
+        document.getElementById('smoothToggleBtn').addEventListener('click', () => {
+            isSmooth = !isSmooth;
+            document.getElementById('smoothToggleBtn').innerHTML = `<i class="fa-solid fa-bezier-curve text-sky-400"></i> <span>平滑曲線: ${isSmooth ? '開' : '關'}</span>`;
+            renderChart();
+        });
+
+        document.getElementById('exportImageBtn').addEventListener('click', () => {
+            if (!chartInstance) return;
+            const url = chartInstance.getDataURL({
+                type: 'png',
+                pixelRatio: 3,
+                backgroundColor: '#060b14'
+            });
+            const a = document.createElement('a');
+            a.download = `${currentGroup}組_111-115歷年平均分數與排名走勢.png`;
+            a.href = url;
+            a.click();
+        });
+
+        function sortTable(colIndex) {
+            if (currentSortCol === colIndex) {
+                currentSortAsc = !currentSortAsc;
+            } else {
+                currentSortCol = colIndex;
+                currentSortAsc = false;
+            }
+            
+            const items = rawData[currentGroup];
+            items.sort((a, b) => {
+                if (colIndex === 0) {
+                    return currentSortAsc ? a.fullName.localeCompare(b.fullName, 'zh-Hant') : b.fullName.localeCompare(a.fullName, 'zh-Hant');
+                } else if (colIndex >= 1 && colIndex <= 5) {
+                    const valA = a.scores[colIndex - 1] ?? -999;
+                    const valB = b.scores[colIndex - 1] ?? -999;
+                    return currentSortAsc ? (valA - valB) : (valB - valA);
+                } else if (colIndex === 6) {
+                    const valA = a.diff ?? -999;
+                    const valB = b.diff ?? -999;
+                    return currentSortAsc ? (valA - valB) : (valB - valA);
+                }
+                return 0;
+            });
+            renderTable();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initTabs();
+            switchGroup('醫學');
+            sortTable(5);
+        });
+    </script>
+</body>
+</html>
