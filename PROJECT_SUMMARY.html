@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>111～115學年度大學分發入學最低錄取分數資料處理與視覺化分析專案記錄</title>
+    <style>
+        :root {
+            --primary: #1F4E79;
+            --primary-light: #2c6da7;
+            --accent: #0284C7;
+            --bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --success-bg: #ECFDF5;
+            --success-text: #065F46;
+            --tag-bg: #EFF6FF;
+            --tag-text: #1D4ED8;
+            --gold: #D97706;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Microsoft JhengHei", Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.7;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1120px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #0c2338 100%);
+            color: #FFFFFF;
+            padding: 42px 36px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(31, 78, 121, 0.25);
+            margin-bottom: 36px;
+        }
+
+        header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            font-size: 15px;
+            color: #E2E8F0;
+            line-height: 1.6;
+        }
+
+        .section-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 32px;
+            margin-bottom: 28px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin: 22px 0 12px 0;
+        }
+
+        p, li {
+            font-size: 15px;
+            color: var(--text-main);
+        }
+
+        ul, ol {
+            padding-left: 24px;
+            margin-bottom: 16px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            margin-right: 6px;
+        }
+
+        .badge-success {
+            background: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        .badge-gold {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        th, td {
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+
+        th {
+            background-color: #F1F5F9;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #F8FAFC;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .file-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px 20px;
+            background: #FFFFFF;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .file-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.06);
+        }
+
+        .file-card.featured {
+            border-color: var(--accent);
+            background: #F0F9FF;
+        }
+
+        .file-card a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .file-card a:hover {
+            text-decoration: underline;
+        }
+
+        .file-card .desc {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .highlight-box {
+            background: #EFF6FF;
+            border-left: 4px solid var(--primary-light);
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin: 18px 0;
+        }
+
+        .feature-box {
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 18px;
+        }
+
+        .feature-box h4 {
+            font-size: 15px;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+
+        .feature-box p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🎓 111～115學年度大學分發入學最低錄取分數專案記錄</h1>
+        <p>完整收錄 5 年（111～115 學年度）考分會分發入學錄取標準數據清洗、加權拆解、單科平均計算、醫療衛生五大群組排名分析、互動式儀表板與 GitHub 發布準備。</p>
+    </header>
+
+    <!-- 一、專案背景與目標 -->
+    <div class="section-card">
+        <h2>📌 一、專案背景與目標</h2>
+        <p>本專案旨在將考分會公佈之 <strong>111 至 115 學年度（連續 5 年）「大學分發入學 各系組最低錄取標準及錄取人數一覽表」</strong> PDF 原始文件，透過 Python 進行全自動化資料提取、字串清洗、欄位拆解、加權計算與跨年度彙整，並進一步針對 <strong>醫學、護理、聽語、視光、醫檢</strong> 五大醫療衛生核心學群（共 68 個系組）進行組內歷年排名統計、分數消長分析、互動式儀表板開發與 GitHub Pages 線上展示。</p>
+    </div>
+
+    <!-- 二、討論過程與需求演進 -->
+    <div class="section-card">
+        <h2>💬 二、討論過程與需求演進</h2>
+        
+        <h3>1. 初始需求確認（115 學年度）</h3>
+        <ul>
+            <li><strong>核心欄位保留：</strong> 僅保留 <code>校名</code>、<code>系組名</code>、<code>採計及加權</code>、<code>錄取人數(含外加)</code>、<code>普通生錄取分數</code>。</li>
+            <li><strong>拆分採計及加權：</strong>
+                <ul>
+                    <li><code>科目</code>：提取大考科目名稱（如國、英、數A、數甲、物、化等），並以頓號（<code>、</code>）分隔。</li>
+                    <li><code>加權</code>：將各科權重係數加總（例如 <code>1.50 + 1.25 + 1.25 + 1.00 = 5.0</code>）。</li>
+                </ul>
+            </li>
+            <li><strong>計算平均分數：</strong> 新增 <code>平均分數</code> 欄位（公式：<code>普通生錄取分數 ÷ 加權總和</code>，四捨五入至小數點後第 2 位）。</li>
+            <li><strong>缺額處理：</strong> 普通生錄取分數為 <code>-----</code>（無錄取標準／缺額）之系組直接留空白。</li>
+        </ul>
+
+        <h3>2. 多年度批次擴展與跨年度彙整</h3>
+        <ul>
+            <li>陸續納入 111、112、113、114 學年度之原始 PDF 資料。</li>
+            <li>比照 115 標準格式，產出各學年度獨立之 Excel 資料檔。</li>
+            <li>抽取 111～115 連續 5 年之 <code>校名</code>、<code>系組名</code> 與 <code>平均分數</code>，自動對齊並合併為跨年度彙整總表（共 2,576 筆）。</li>
+        </ul>
+
+        <h3>3. 111 學年度資料深度除錯與修復</h3>
+        <div class="highlight-box">
+            <strong>🔍 111 年度異常原因：</strong> 111 年 PDF 因字型間距（Kerning）特殊，傳統抽取會誤在數字與字串間產生空格（如 <code>1 9</code>、<code>1 95.00</code>、<code>數Ax1.0 0</code>）。<br>
+            <strong>🛠️ 修復策略：</strong> 改用 <code>pdfplumber</code> 精確字形邊界解析引擎重新解析，徹底消除空格誤差，1,900 筆資料全數 100% 精準校正！
+        </div>
+
+        <h3>4. 醫療衛生五大群組深度分析、資料庫更新與 GitHub 發布準備</h3>
+        <ul>
+            <li><strong>68 筆核心醫療系組資料庫：</strong> 包含醫學（18系組）、護理（28系組）、聽語（5系組）、視光（4系組）、醫檢（13系組）。</li>
+            <li><strong>五大核心群組排名與 Excel 原生折線圖：</strong> 建立 <code>大學部111-115成績_含折線圖.xlsx</code>，涵蓋 68 筆醫療衛生系組，包含 5 年分數、組內排名（#1~#N）、五年分數增減值，並內建 Excel 原生圖表。</li>
+            <li><strong>互動式網頁儀表板：</strong> 建立 <code>index.html</code>（<code>大學部111-115成績_互動圖表.html</code>），採用 Apache ECharts 5 打造 90%+ 寬幅高對比儀表板，支援前 5 名聚焦、公立大學篩選、即時搜尋與排序。</li>
+            <li><strong>GitHub Pages 發布支援：</strong> 配置標準 <code>index.html</code>、<code>README.md</code> 與 <code>.gitignore</code>，支援一鍵推播上線。</li>
+        </ul>
+    </div>
+
+    <!-- 三、技術架構與適應性解析 -->
+    <div class="section-card">
+        <h2>🛠️ 三、技術架構與解析策略</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>學年度 / 模組</th>
+                    <th>原始 PDF 特徵</th>
+                    <th>使用技術 / 解析架構</th>
+                    <th>解析成果</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>111 學年度</strong></td>
+                    <td>字距較寬，易產生字元空隙</td>
+                    <td><code>pdfplumber</code> 邊界佈局引擎</td>
+                    <td><span class="badge badge-success">1,900 筆 (100%)</span></td>
+                </tr>
+                <tr>
+                    <td><strong>112 學年度</strong></td>
+                    <td>Token 序列垂直排版</td>
+                    <td>狀態機（State Machine）Token 解析</td>
+                    <td><span class="badge badge-success">1,838 筆 (100%)</span></td>
+                </tr>
+                <tr>
+                    <td><strong>113 學年度</strong></td>
+                    <td>Token 序列垂直排版</td>
+                    <td>狀態機（State Machine）Token 解析</td>
+                    <td><span class="badge badge-success">1,839 筆 (100%)</span></td>
+                </tr>
+                <tr>
+                    <td><strong>114 學年度</strong></td>
+                    <td>水平排版，長系名跨行換行</td>
+                    <td>正則表達式跨行合併清洗</td>
+                    <td><span class="badge badge-success">1,787 筆 (100%)</span></td>
+                </tr>
+                <tr>
+                    <td><strong>115 學年度</strong></td>
+                    <td>水平排版，長系名跨行換行</td>
+                    <td>正則表達式跨行合併清洗</td>
+                    <td><span class="badge badge-success">1,764 筆 (100%)</span></td>
+                </tr>
+                <tr>
+                    <td><strong>跨年度彙整總表</strong></td>
+                    <td>跨 5 年系組對齊與缺額處理</td>
+                    <td>Python 字典聚合與自然排序</td>
+                    <td><span class="badge badge-success">2,576 筆各系組 5 年分數</span></td>
+                </tr>
+                <tr>
+                    <td><strong>醫療群組視覺化</strong></td>
+                    <td>醫學/護理/聽語/視光/醫檢</td>
+                    <td>Apache ECharts 5, Tailwind CSS, OpenPyXL</td>
+                    <td><span class="badge badge-gold">68 筆組內排名與折線圖</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 四、產出檔案總覽 -->
+    <div class="section-card">
+        <h2>📂 四、成果產出檔案總覽</h2>
+        
+        <h3>1. 互動式視覺化儀表板與群組圖表（⭐ 重點推薦）</h3>
+        <div class="file-grid">
+            <div class="file-card featured">
+                <a href="file:///d:/GeminiCLi/basara/115Standard/index.html">🌐 index.html / 大學部111-115成績_互動圖表.html</a>
+                <div class="desc">五大醫療群組互動式折線圖與排名儀表板（瀏覽器直接點擊開啟）</div>
+            </div>
+            <div class="file-card featured">
+                <a href="file:///d:/GeminiCLi/basara/115Standard/大學部111-115成績_含折線圖.xlsx">📊 大學部111-115成績_含折線圖.xlsx</a>
+                <div class="desc">內建 5 大群組獨立工作表、組內排名與 Excel 原生折線圖</div>
+            </div>
+            <div class="file-card">
+                <a href="file:///d:/GeminiCLi/basara/115Standard/大學部111-115成績.xlsx">📄 大學部111-115成績.xlsx</a>
+                <div class="desc">已標註 5 大醫療群組歸類標籤之成績資料庫（68 筆核心系組）</div>
+            </div>
+            <div class="file-card">
+                <a href="file:///d:/GeminiCLi/basara/115Standard/README.md">📘 README.md</a>
+                <div class="desc">GitHub 專案說明與 GitHub Pages 部署操作指南</div>
+            </div>
+            <div class="file-card">
+                <a href="file:///d:/GeminiCLi/basara/115Standard/update_all_data.py">⚙️ update_all_data.py</a>
+                <div class="desc">儀表板與 Excel 圖表自動更新腳本</div>
+            </div>
+        </div>
+
+        <h3>2. 歷年各年度獨立 Excel 檔案與跨年度總表</h3>
+        <div class="file-grid">
+            <div class="file-card">
+                <a href="file:///d:/GeminiCLi/basara/115Standard/111-115歷年各系組平均分數彙整.xlsx">🌟 111-115歷年各系組平均分數彙整.xlsx</a>
+                <div class="desc">跨 5 年度完整彙整總表（涵蓋所有招生系組共 <strong>2,576 筆</strong>）</div>
+            </div>
+            <div class="file-card">
+                <a href="file:///d:/GeminiCLi/basara/115Standard/111_result_school_data.xlsx">📄 111_result_school_data.xlsx</a>
+                <div class="desc">111 學年度獨立檔（共 1,900 筆，已校正）</div>
+            </div>
+            <div class="file-card">
+                <a href="file:///d:/GeminiCLi/basara/115Standard/112_result_school_data.xlsx">📄 112_result_school_data.xlsx</a>
+                <div class="desc">112 學年度獨立檔（共 1,838 筆）</div>
+            </div>
+            <div class="file-card">
+                <a href="file:///d:/GeminiCLi/basara/115Standard/113_result_school_data.xlsx">📄 113_result_school_data.xlsx</a>
+                <div class="desc">113 學年度獨立檔（共 1,839 筆）</div>
+            </div>
+            <div class="file-card">
+                <a href="file:///d:/GeminiCLi/basara/115Standard/114_result_school_data.xlsx">📄 114_result_school_data.xlsx</a>
+                <div class="desc">114 學年度獨立檔（共 1,787 筆）</div>
+            </div>
+            <div class="file-card">
+                <a href="file:///d:/GeminiCLi/basara/115Standard/115_result_school_data.xlsx">📄 115_result_school_data.xlsx</a>
+                <div class="desc">115 學年度獨立檔（共 1,764 筆）</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 五、五大醫療群組重點指標摘要 -->
+    <div class="section-card">
+        <h2>📈 五、五大醫療衛生群組最新重點指標摘要</h2>
+        
+        <div class="feature-grid">
+            <div class="feature-box">
+                <h4>🩺 醫學組（18系組）</h4>
+                <p><strong>臺大醫學系</strong> 連續 5 年穩居全台 #1（56.00 ➔ 57.00）。陽明交大穩居 #2~#3（54.40 ➔ 55.80），成大穩居 #4~#5（54.20 ➔ 55.20）。</p>
+            </div>
+            <div class="feature-box">
+                <h4>🗣️ 聽語組（5系組）</h4>
+                <p><strong>中山醫大語言治療組</strong> 穩居第一，五年成長 +13.50 分（30.50 ➔ 44.00）。亞洲大學聽語系亦穩定攀升至 41.80 分。</p>
+            </div>
+            <div class="feature-box">
+                <h4>💉 護理組（28系組）</h4>
+                <p><strong>中國醫大護理系</strong> 五年大幅回升 +19.42 分（23.25 ➔ 42.67）。中山醫大護理系穩定於 30.50 ~ 33.25 區間。</p>
+            </div>
+            <div class="feature-box">
+                <h4>🔬 醫檢（13系組）與視光（4系組）</h4>
+                <p><strong>陽明交大醫檢系</strong> 攀升至 49.85 分，<strong>臺大醫檢系</strong> 49.40 分。<strong>中山醫大視光系</strong> 穩居視光第一（22.11 ➔ 35.22，+13.11 分）。</p>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>群組</th>
+                    <th>校名</th>
+                    <th>系組名</th>
+                    <th class="text-right">111年</th>
+                    <th class="text-right">112年</th>
+                    <th class="text-right">113年</th>
+                    <th class="text-right">114年</th>
+                    <th class="text-right">115年</th>
+                    <th class="text-center">5年增減</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="badge">醫學</span></td>
+                    <td>國立臺灣大學</td>
+                    <td>醫學系</td>
+                    <td class="text-right">56.00</td>
+                    <td class="text-right">56.60</td>
+                    <td class="text-right">57.40</td>
+                    <td class="text-right">57.60</td>
+                    <td class="text-right">57.00</td>
+                    <td class="text-center" style="color:#059669;">+1.00</td>
+                </tr>
+                <tr>
+                    <td><span class="badge">醫學</span></td>
+                    <td>國立陽明交通大學</td>
+                    <td>醫學系</td>
+                    <td class="text-right">54.40</td>
+                    <td class="text-right">55.60</td>
+                    <td class="text-right">56.80</td>
+                    <td class="text-right">56.60</td>
+                    <td class="text-right">55.80</td>
+                    <td class="text-center" style="color:#059669;">+1.40</td>
+                </tr>
+                <tr>
+                    <td><span class="badge">聽語</span></td>
+                    <td>中山醫學大學</td>
+                    <td>語言治療與聽力學系語言治療組</td>
+                    <td class="text-right">30.50</td>
+                    <td class="text-right">42.17</td>
+                    <td class="text-right">43.67</td>
+                    <td class="text-right">43.08</td>
+                    <td class="text-right">44.00</td>
+                    <td class="text-center" style="color:#059669;">+13.50</td>
+                </tr>
+                <tr>
+                    <td><span class="badge">護理</span></td>
+                    <td>中國醫藥大學</td>
+                    <td>護理學系</td>
+                    <td class="text-right">23.25</td>
+                    <td class="text-right">40.00</td>
+                    <td class="text-right">42.00</td>
+                    <td class="text-right">42.33</td>
+                    <td class="text-right">42.67</td>
+                    <td class="text-center" style="color:#059669;">+19.42</td>
+                </tr>
+                <tr>
+                    <td><span class="badge">醫檢</span></td>
+                    <td>國立陽明交通大學</td>
+                    <td>醫學生物技術暨檢驗學系</td>
+                    <td class="text-right">45.69</td>
+                    <td class="text-right">46.35</td>
+                    <td class="text-right">49.40</td>
+                    <td class="text-right">48.93</td>
+                    <td class="text-right">49.85</td>
+                    <td class="text-center" style="color:#059669;">+4.16</td>
+                </tr>
+                <tr>
+                    <td><span class="badge">醫檢</span></td>
+                    <td>國立臺灣大學</td>
+                    <td>醫學檢驗暨生物技術學系</td>
+                    <td class="text-right">48.20</td>
+                    <td class="text-right">48.60</td>
+                    <td class="text-right">50.80</td>
+                    <td class="text-right">51.00</td>
+                    <td class="text-right">49.40</td>
+                    <td class="text-center" style="color:#059669;">+1.20</td>
+                </tr>
+                <tr>
+                    <td><span class="badge">視光</span></td>
+                    <td>中山醫學大學</td>
+                    <td>視光學系</td>
+                    <td class="text-right">22.11</td>
+                    <td class="text-right">34.33</td>
+                    <td class="text-right">37.11</td>
+                    <td class="text-right">36.78</td>
+                    <td class="text-right">35.22</td>
+                    <td class="text-center" style="color:#059669;">+13.11</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 六、GitHub 發布指引 -->
+    <div class="section-card">
+        <h2>🚀 六、GitHub 上傳與 GitHub Pages 發布步驟</h2>
+        <ol>
+            <li><strong>建立 GitHub Repository：</strong> 登入 <a href="https://github.com" target="_blank">GitHub</a> 建立一個新的 Public 倉庫（例如命名為 <code>university-scores-dashboard</code>）。</li>
+            <li><strong>上傳專案檔案：</strong> 直接將專案資料夾下的所有檔案拖曳至網頁上傳並 Commit。</li>
+            <li><strong>啟用 GitHub Pages：</strong> 進入倉庫的 <strong>Settings ➔ Pages</strong>，在 Build and deployment 選擇 <strong>Deploy from a branch</strong>（Branch 選 <code>main</code>，資料夾選 <code>/ (root)</code>）後點擊 <strong>Save</strong>。</li>
+            <li><strong>即刻線上預覽：</strong> 等候約 1 分鐘即可透過 GitHub 專屬網址線上即時瀏覽互動式折線圖儀表板！</li>
+        </ol>
+    </div>
+
+    <footer>
+        專案最新更新日期：2026-08-19 ｜ 產出工具：Python 自動化數據處理套件 (pypdf, pdfplumber, openpyxl) & Apache ECharts 5
+    </footer>
+</div>
+
+</body>
+</html>
