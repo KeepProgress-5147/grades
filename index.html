@@ -259,7 +259,1582 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        const rawData = {"醫學": [{"school": "中國醫藥大學", "dept": "醫學系", "fullName": "中國醫藥大學 醫學系", "isPublic": false, "scores": [53.0, 53.6, 54.6, 54.6, 53.0], "ranks": [6, 9, 8, 10, 13], "minScore": 53.0, "maxScore": 54.6, "diff": 0.0}, {"school": "中山醫學大學", "dept": "醫學系", "fullName": "中山醫學大學 醫學系", "isPublic": false, "scores": [51.2, 52.0, 52.8, 53.4, 52.0], "ranks": [14, 14, 15, 16, 16], "minScore": 51.2, "maxScore": 53.4, "diff": 0.8}, {"school": "國立成功大學", "dept": "醫學系", "fullName": "國立成功大學 醫學系", "isPublic": true, "scores": [54.2, 55.0, 56.0, 55.8, 55.2], "ranks": [5, 4, 4, 5, 4], "minScore": 54.2, "maxScore": 56.0, "diff": 1.0}, {"school": "國立臺灣大學", "dept": "醫學系", "fullName": "國立臺灣大學 醫學系", "isPublic": true, "scores": [56.0, 56.6, 57.4, 57.6, 57.0], "ranks": [1, 1, 1, 1, 1], "minScore": 56.0, "maxScore": 57.6, "diff": 1.0}, {"school": "國立陽明交通大學", "dept": "醫學系", "fullName": "國立陽明交通大學 醫學系", "isPublic": true, "scores": [54.4, 55.6, 56.8, 56.6, 55.8], "ranks": [4, 3, 2, 3, 3], "minScore": 54.4, "maxScore": 56.8, "diff": 1.4}, {"school": "慈濟大學", "dept": "醫學系", "fullName": "慈濟大學 醫學系", "isPublic": false, "scores": [50.75, 51.8, 52.6, 53.4, 51.8], "ranks": [17, 15, 17, 16, 18], "minScore": 50.75, "maxScore": 53.4, "diff": 1.05}, {"school": "臺北醫學大學", "dept": "醫學系", "fullName": "臺北醫學大學 醫學系", "isPublic": false, "scores": [54.6, 55.8, 54.8, 55.6, 54.2], "ranks": [2, 2, 6, 6, 7], "minScore": 54.2, "maxScore": 55.8, "diff": -0.4}, {"school": "輔仁大學", "dept": "醫學系", "fullName": "輔仁大學 醫學系", "isPublic": false, "scores": [52.0, 52.6, 53.6, 54.2, 53.0], "ranks": [12, 13, 12, 12, 13], "minScore": 52.0, "maxScore": 54.2, "diff": 1.0}, {"school": "長庚大學", "dept": "醫學系", "fullName": "長庚大學 醫學系", "isPublic": false, "scores": [53.0, 53.8, 54.6, 54.8, 53.8], "ranks": [6, 8, 8, 8, 9], "minScore": 53.0, "maxScore": 54.8, "diff": 0.8}, {"school": "馬偕醫學大學", "dept": "醫學系", "fullName": "馬偕醫學大學 醫學系", "isPublic": false, "scores": [52.8, 55.0, 53.8, 54.0, 52.8], "ranks": [9, 4, 11, 15, 15], "minScore": 52.8, "maxScore": 55.0, "diff": 0.0}, {"school": "高雄醫學大學", "dept": "醫學系", "fullName": "高雄醫學大學 醫學系", "isPublic": false, "scores": [52.2, 52.8, 53.6, 54.2, 53.2], "ranks": [10, 12, 12, 12, 11], "minScore": 52.2, "maxScore": 54.2, "diff": 1.0}, {"school": "中國醫藥大學", "dept": "牙醫學系", "fullName": "中國醫藥大學 牙醫學系", "isPublic": false, "scores": [50.8, 51.6, 52.8, 54.24, 53.05], "ranks": [15, 17, 15, 11, 12], "minScore": 50.8, "maxScore": 54.24, "diff": 2.25}, {"school": "中山醫學大學", "dept": "牙醫學系", "fullName": "中山醫學大學 牙醫學系", "isPublic": false, "scores": [49.53, 51.43, 52.43, 53.38, 51.95], "ranks": [18, 18, 18, 18, 17], "minScore": 49.53, "maxScore": 53.38, "diff": 2.42}, {"school": "國立成功大學", "dept": "牙醫學系", "fullName": "國立成功大學 牙醫學系", "isPublic": true, "scores": [51.8, 53.0, 54.2, 54.8, 54.0], "ranks": [13, 11, 10, 8, 8], "minScore": 51.8, "maxScore": 54.8, "diff": 2.2}, {"school": "國立臺灣大學", "dept": "牙醫學系", "fullName": "國立臺灣大學 牙醫學系", "isPublic": true, "scores": [54.6, 55.0, 56.6, 57.0, 56.0], "ranks": [2, 4, 3, 2, 2], "minScore": 54.6, "maxScore": 57.0, "diff": 1.4}, {"school": "國立陽明交通大學", "dept": "牙醫學系", "fullName": "國立陽明交通大學 牙醫學系", "isPublic": true, "scores": [53.0, 54.2, 55.0, 56.0, 55.2], "ranks": [6, 7, 5, 4, 4], "minScore": 53.0, "maxScore": 56.0, "diff": 2.2}, {"school": "臺北醫學大學", "dept": "牙醫學系", "fullName": "臺北醫學大學 牙醫學系", "isPublic": false, "scores": [52.2, 53.4, 54.8, 55.2, 54.6], "ranks": [10, 10, 6, 7, 6], "minScore": 52.2, "maxScore": 55.2, "diff": 2.4}, {"school": "高雄醫學大學", "dept": "牙醫學系", "fullName": "高雄醫學大學 牙醫學系", "isPublic": false, "scores": [50.8, 51.8, 53.2, 54.2, 53.4], "ranks": [15, 15, 14, 12, 10], "minScore": 50.8, "maxScore": 54.2, "diff": 2.6}], "護理": [{"school": "中國醫藥大學", "dept": "護理學系", "fullName": "中國醫藥大學 護理學系", "isPublic": false, "scores": [23.25, 40.0, 42.0, 42.33, 42.67], "ranks": [6, 5, 5, 5, 5], "minScore": 23.25, "maxScore": 42.67, "diff": 19.42}, {"school": "中山醫學大學", "dept": "護理學系", "fullName": "中山醫學大學 護理學系", "isPublic": false, "scores": [19.53, 31.5, 33.25, 32.75, 30.5], "ranks": [11, 10, 9, 11, 11], "minScore": 19.53, "maxScore": 33.25, "diff": 10.97}, {"school": "亞洲大學", "dept": "護理學系(國際護理組)", "fullName": "亞洲大學 護理學系(國際護理組)", "isPublic": false, "scores": [12.67, 20.14, 20.86, 26.45, 21.64], "ranks": [18, 16, 20, 16, 17], "minScore": 12.67, "maxScore": 26.45, "diff": 8.97}, {"school": "亞洲大學", "dept": "護理學系(智慧護理組)", "fullName": "亞洲大學 護理學系(智慧護理組)", "isPublic": false, "scores": [null, null, null, 34.45, 31.45], "ranks": [null, null, null, 10, 10], "minScore": 31.45, "maxScore": 34.45, "diff": null}, {"school": "亞洲大學", "dept": "護理學系(臨床照護組)", "fullName": "亞洲大學 護理學系(臨床照護組)", "isPublic": false, "scores": [15.75, 24.33, 28.38, 29.82, 22.91], "ranks": [16, 15, 16, 15, 16], "minScore": 15.75, "maxScore": 29.82, "diff": 7.16}, {"school": "亞洲大學", "dept": "護理學系(銀髮智慧照護組)", "fullName": "亞洲大學 護理學系(銀髮智慧照護組)", "isPublic": false, "scores": [null, null, 32.57, null, null], "ranks": [null, null, 10, null, null], "minScore": 32.57, "maxScore": 32.57, "diff": null}, {"school": "亞洲大學", "dept": "護理學系(高齡長期照護組)", "fullName": "亞洲大學 護理學系(高齡長期照護組)", "isPublic": false, "scores": [20.75, 27.0, null, null, null], "ranks": [10, 14, null, null, null], "minScore": 20.75, "maxScore": 27.0, "diff": null}, {"school": "元智大學", "dept": "護理學系", "fullName": "元智大學 護理學系", "isPublic": false, "scores": [null, null, 31.0, 31.33, 26.0], "ranks": [null, null, 13, 13, 13], "minScore": 26.0, "maxScore": 31.33, "diff": null}, {"school": "國立中山大學", "dept": "護理學系", "fullName": "國立中山大學 護理學系", "isPublic": true, "scores": [null, null, null, 40.08, 37.17], "ranks": [null, null, null, 7, 8], "minScore": 37.17, "maxScore": 40.08, "diff": null}, {"school": "國立成功大學", "dept": "護理學系", "fullName": "國立成功大學 護理學系", "isPublic": true, "scores": [41.92, 43.25, 44.42, 47.6, 46.8], "ranks": [2, 3, 3, 2, 2], "minScore": 41.92, "maxScore": 47.6, "diff": 4.88}, {"school": "國立暨南國際大學", "dept": "護理學系", "fullName": "國立暨南國際大學 護理學系", "isPublic": true, "scores": [null, 34.95, 32.37, 32.62, 24.88], "ranks": [null, 8, 11, 12, 15], "minScore": 24.88, "maxScore": 34.95, "diff": null}, {"school": "國立臺東大學", "dept": "護理學系", "fullName": "國立臺東大學 護理學系", "isPublic": true, "scores": [null, null, null, null, 29.56], "ranks": [null, null, null, null, 12], "minScore": 29.56, "maxScore": 29.56, "diff": null}, {"school": "國立臺灣大學", "dept": "護理學系", "fullName": "國立臺灣大學 護理學系", "isPublic": true, "scores": [44.8, 46.2, 48.2, 48.0, 45.4], "ranks": [1, 1, 1, 1, 4], "minScore": 44.8, "maxScore": 48.2, "diff": 0.6}, {"school": "國立金門大學", "dept": "護理學系", "fullName": "國立金門大學 護理學系", "isPublic": true, "scores": [21.8, 29.56, null, null, null], "ranks": [9, 11, null, null, null], "minScore": 21.8, "maxScore": 29.56, "diff": null}, {"school": "國立金門大學", "dept": "護理學系(A組)", "fullName": "國立金門大學 護理學系(A組)", "isPublic": true, "scores": [null, null, 31.22, 26.22, 20.89], "ranks": [null, null, 12, 17, 18], "minScore": 20.89, "maxScore": 31.22, "diff": null}, {"school": "國立金門大學", "dept": "護理學系(B組)", "fullName": "國立金門大學 護理學系(B組)", "isPublic": true, "scores": [null, null, 23.67, 25.11, 18.67], "ranks": [null, null, 19, 19, 20], "minScore": 18.67, "maxScore": 25.11, "diff": null}, {"school": "國立陽明交通大學", "dept": "護理學系", "fullName": "國立陽明交通大學 護理學系", "isPublic": true, "scores": [41.73, 43.27, 45.36, 46.0, 47.89], "ranks": [3, 2, 2, 3, 1], "minScore": 41.73, "maxScore": 47.89, "diff": 6.16}, {"school": "大葉大學", "dept": "護理學系", "fullName": "大葉大學 護理學系", "isPublic": false, "scores": [19.52, 20.0, null, 15.43, 16.61], "ranks": [12, 17, null, 22, 21], "minScore": 15.43, "maxScore": 20.0, "diff": -2.91}, {"school": "大葉大學", "dept": "護理學系(國際組)", "fullName": "大葉大學 護理學系(國際組)", "isPublic": false, "scores": [null, null, 16.87, null, null], "ranks": [null, null, 21, null, null], "minScore": 16.87, "maxScore": 16.87, "diff": null}, {"school": "大葉大學", "dept": "護理學系(臨床組)", "fullName": "大葉大學 護理學系(臨床組)", "isPublic": false, "scores": [null, null, 24.87, null, null], "ranks": [null, null, 18, null, null], "minScore": 24.87, "maxScore": 24.87, "diff": null}, {"school": "慈濟大學", "dept": "護理學系", "fullName": "慈濟大學 護理學系", "isPublic": false, "scores": [13.67, 27.4, 29.0, 15.6, 16.6], "ranks": [17, 13, 15, 21, 22], "minScore": 13.67, "maxScore": 29.0, "diff": 2.93}, {"school": "義守大學", "dept": "護理學系", "fullName": "義守大學 護理學系", "isPublic": false, "scores": [18.0, 15.2, 26.22, 25.78, 18.96], "ranks": [14, 19, 17, 18, 19], "minScore": 15.2, "maxScore": 26.22, "diff": 0.96}, {"school": "臺北醫學大學", "dept": "護理學系", "fullName": "臺北醫學大學 護理學系", "isPublic": false, "scores": [34.76, 42.4, 43.8, 43.9, 46.75], "ranks": [4, 4, 4, 4, 3], "minScore": 34.76, "maxScore": 46.75, "diff": 11.99}, {"school": "輔仁大學", "dept": "護理學系", "fullName": "輔仁大學 護理學系", "isPublic": false, "scores": [16.14, 31.9, 35.0, 34.88, 34.12], "ranks": [15, 9, 8, 9, 9], "minScore": 16.14, "maxScore": 35.0, "diff": 17.98}, {"school": "長庚大學", "dept": "護理學系", "fullName": "長庚大學 護理學系", "isPublic": false, "scores": [24.2, 38.2, 40.0, 40.88, 38.38], "ranks": [5, 6, 6, 6, 7], "minScore": 24.2, "maxScore": 40.88, "diff": 14.18}, {"school": "長榮大學", "dept": "護理學系", "fullName": "長榮大學 護理學系", "isPublic": false, "scores": [23.09, 16.45, 16.18, 19.64, 15.36], "ranks": [7, 18, 22, 20, 23], "minScore": 15.36, "maxScore": 23.09, "diff": -7.73}, {"school": "馬偕醫學大學", "dept": "護理學系", "fullName": "馬偕醫學大學 護理學系", "isPublic": false, "scores": [18.18, 29.55, 30.91, 30.55, 25.0], "ranks": [13, 12, 14, 14, 14], "minScore": 18.18, "maxScore": 30.91, "diff": 6.82}, {"school": "高雄醫學大學", "dept": "護理學系", "fullName": "高雄醫學大學 護理學系", "isPublic": false, "scores": [22.2, 36.6, 37.48, 37.6, 39.75], "ranks": [8, 7, 7, 8, 6], "minScore": 22.2, "maxScore": 39.75, "diff": 17.55}], "聽語": [{"school": "亞洲大學", "dept": "聽力暨語言治療學系", "fullName": "亞洲大學 聽力暨語言治療學系", "isPublic": false, "scores": [35.0, 34.8, 41.6, 41.6, 41.8], "ranks": [1, 5, 2, 2, 2], "minScore": 34.8, "maxScore": 41.8, "diff": 6.8}, {"school": "馬偕醫學大學", "dept": "聽力暨語言治療學系聽力組", "fullName": "馬偕醫學大學 聽力暨語言治療學系聽力組", "isPublic": false, "scores": [29.67, 36.08, 36.77, 33.85, 33.18], "ranks": [4, 4, 5, 5, 5], "minScore": 29.67, "maxScore": 36.77, "diff": 3.51}, {"school": "馬偕醫學大學", "dept": "聽力暨語言治療學系語言組", "fullName": "馬偕醫學大學 聽力暨語言治療學系語言組", "isPublic": false, "scores": [33.62, 40.54, 41.04, 38.67, 38.5], "ranks": [2, 2, 3, 4, 3], "minScore": 33.62, "maxScore": 41.04, "diff": 4.88}, {"school": "中山醫學大學", "dept": "語言治療與聽力學系聽力組", "fullName": "中山醫學大學 語言治療與聽力學系聽力組", "isPublic": false, "scores": [22.17, 37.58, 39.33, 39.08, 37.33], "ranks": [5, 3, 4, 3, 4], "minScore": 22.17, "maxScore": 39.33, "diff": 15.16}, {"school": "中山醫學大學", "dept": "語言治療與聽力學系語言治療組", "fullName": "中山醫學大學 語言治療與聽力學系語言治療組", "isPublic": false, "scores": [30.5, 42.17, 43.67, 43.08, 44.0], "ranks": [3, 1, 1, 1, 1], "minScore": 30.5, "maxScore": 44.0, "diff": 13.5}], "視光": [{"school": "中山醫學大學", "dept": "視光學系", "fullName": "中山醫學大學 視光學系", "isPublic": false, "scores": [22.11, 34.33, 37.11, 36.78, 35.22], "ranks": [1, 1, 1, 2, 1], "minScore": 22.11, "maxScore": 37.11, "diff": 13.11}, {"school": "亞洲大學", "dept": "視光學系", "fullName": "亞洲大學 視光學系", "isPublic": false, "scores": [19.86, 31.43, 36.3, 38.3, 32.2], "ranks": [2, 3, 2, 1, 2], "minScore": 19.86, "maxScore": 38.3, "diff": 12.34}, {"school": "大葉大學", "dept": "視光學系", "fullName": "大葉大學 視光學系", "isPublic": false, "scores": [null, 15.2, 15.48, 12.87, 15.04], "ranks": [null, 4, 4, 4, 4], "minScore": 12.87, "maxScore": 15.48, "diff": null}, {"school": "馬偕醫學大學", "dept": "視光學系", "fullName": "馬偕醫學大學 視光學系", "isPublic": false, "scores": [null, 31.91, 32.57, 32.86, 29.48], "ranks": [null, 2, 3, 3, 3], "minScore": 29.48, "maxScore": 32.86, "diff": null}], "醫檢": [{"school": "中國醫藥大學", "dept": "醫學檢驗生物技術學系", "fullName": "中國醫藥大學 醫學檢驗生物技術學系", "isPublic": false, "scores": [40.71, 43.21, 46.79, 47.71, 45.57], "ranks": [4, 5, 4, 3, 5], "minScore": 40.71, "maxScore": 47.71, "diff": 4.86}, {"school": "中山醫學大學", "dept": "醫學檢驗暨生物技術學系", "fullName": "中山醫學大學 醫學檢驗暨生物技術學系", "isPublic": false, "scores": [36.0, 41.25, 44.0, 43.0, 41.0], "ranks": [6, 6, 6, 6, 7], "minScore": 36.0, "maxScore": 44.0, "diff": 5.0}, {"school": "亞洲大學", "dept": "醫學檢驗暨生物技術學系(生物技術組)", "fullName": "亞洲大學 醫學檢驗暨生物技術學系(生物技術組)", "isPublic": false, "scores": [27.36, 34.36, 37.18, 39.27, 37.73], "ranks": [8, 7, 8, 8, 8], "minScore": 27.36, "maxScore": 39.27, "diff": 10.37}, {"school": "亞洲大學", "dept": "醫學檢驗暨生物技術學系(醫事檢驗組)", "fullName": "亞洲大學 醫學檢驗暨生物技術學系(醫事檢驗組)", "isPublic": false, "scores": [32.92, 33.38, 36.23, 38.67, 35.5], "ranks": [7, 8, 10, 9, 9], "minScore": 32.92, "maxScore": 38.67, "diff": 2.58}, {"school": "國立成功大學", "dept": "醫學檢驗生物技術學系", "fullName": "國立成功大學 醫學檢驗生物技術學系", "isPublic": true, "scores": [45.04, 46.26, 48.13, 47.43, 46.57], "ranks": [3, 3, 3, 4, 3], "minScore": 45.04, "maxScore": 48.13, "diff": 1.53}, {"school": "國立臺灣大學", "dept": "醫學檢驗暨生物技術學系", "fullName": "國立臺灣大學 醫學檢驗暨生物技術學系", "isPublic": true, "scores": [48.2, 48.6, 50.8, 51.0, 49.4], "ranks": [1, 1, 1, 1, 1], "minScore": 48.2, "maxScore": 51.0, "diff": 1.2}, {"school": "慈濟大學", "dept": "醫學檢驗生物技術學系", "fullName": "慈濟大學 醫學檢驗生物技術學系", "isPublic": false, "scores": [16.75, 33.25, 36.75, 37.75, 33.0], "ranks": [10, 9, 9, 10, 10], "minScore": 16.75, "maxScore": 37.75, "diff": 16.25}, {"school": "義守大學", "dept": "醫學檢驗技術學系", "fullName": "義守大學 醫學檢驗技術學系", "isPublic": false, "scores": [17.86, 27.14, 34.0, 33.29, 30.0], "ranks": [9, 10, 11, 11, 11], "minScore": 17.86, "maxScore": 34.0, "diff": 12.14}, {"school": "臺北醫學大學", "dept": "醫學檢驗暨生物技術學系", "fullName": "臺北醫學大學 醫學檢驗暨生物技術學系", "isPublic": false, "scores": [45.73, 47.36, 49.18, 49.64, 48.09], "ranks": [2, 2, 2, 2, 2], "minScore": 45.73, "maxScore": 49.64, "diff": 2.36}, {"school": "馬偕醫學大學", "dept": "醫學檢驗暨再生醫學學系", "fullName": "馬偕醫學大學 醫學檢驗暨再生醫學學系", "isPublic": false, "scores": [null, null, 43.3, 43.0, 43.1], "ranks": [null, null, 7, 6, 6], "minScore": 43.0, "maxScore": 43.3, "diff": null}, {"school": "高雄醫學大學", "dept": "醫學檢驗生物技術學系", "fullName": "高雄醫學大學 醫學檢驗生物技術學系", "isPublic": false, "scores": [40.0, 45.75, 46.25, 46.0, 45.62], "ranks": [5, 4, 5, 5, 4], "minScore": 40.0, "maxScore": 46.25, "diff": 5.62}]};
+        const rawData = {
+  "醫學": [
+    {
+      "school": "中國醫藥大學",
+      "dept": "醫學系",
+      "fullName": "中國醫藥大學 醫學系",
+      "isPublic": false,
+      "scores": [
+        53.0,
+        53.6,
+        54.6,
+        54.6,
+        53.0
+      ],
+      "ranks": [
+        6,
+        9,
+        8,
+        10,
+        13
+      ],
+      "minScore": 53.0,
+      "maxScore": 54.6,
+      "diff": 0.0
+    },
+    {
+      "school": "中山醫學大學",
+      "dept": "醫學系",
+      "fullName": "中山醫學大學 醫學系",
+      "isPublic": false,
+      "scores": [
+        51.2,
+        52.0,
+        52.8,
+        53.4,
+        52.0
+      ],
+      "ranks": [
+        14,
+        14,
+        15,
+        16,
+        16
+      ],
+      "minScore": 51.2,
+      "maxScore": 53.4,
+      "diff": 0.8
+    },
+    {
+      "school": "國立成功大學",
+      "dept": "醫學系",
+      "fullName": "國立成功大學 醫學系",
+      "isPublic": true,
+      "scores": [
+        54.2,
+        55.0,
+        56.0,
+        55.8,
+        55.2
+      ],
+      "ranks": [
+        5,
+        4,
+        4,
+        5,
+        4
+      ],
+      "minScore": 54.2,
+      "maxScore": 56.0,
+      "diff": 1.0
+    },
+    {
+      "school": "國立臺灣大學",
+      "dept": "醫學系",
+      "fullName": "國立臺灣大學 醫學系",
+      "isPublic": true,
+      "scores": [
+        56.0,
+        56.6,
+        57.4,
+        57.6,
+        57.0
+      ],
+      "ranks": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "minScore": 56.0,
+      "maxScore": 57.6,
+      "diff": 1.0
+    },
+    {
+      "school": "國立陽明交通大學",
+      "dept": "醫學系",
+      "fullName": "國立陽明交通大學 醫學系",
+      "isPublic": true,
+      "scores": [
+        54.4,
+        55.6,
+        56.8,
+        56.6,
+        55.8
+      ],
+      "ranks": [
+        4,
+        3,
+        2,
+        3,
+        3
+      ],
+      "minScore": 54.4,
+      "maxScore": 56.8,
+      "diff": 1.4
+    },
+    {
+      "school": "慈濟大學",
+      "dept": "醫學系",
+      "fullName": "慈濟大學 醫學系",
+      "isPublic": false,
+      "scores": [
+        50.75,
+        51.8,
+        52.6,
+        53.4,
+        51.8
+      ],
+      "ranks": [
+        17,
+        15,
+        17,
+        16,
+        18
+      ],
+      "minScore": 50.75,
+      "maxScore": 53.4,
+      "diff": 1.05
+    },
+    {
+      "school": "臺北醫學大學",
+      "dept": "醫學系",
+      "fullName": "臺北醫學大學 醫學系",
+      "isPublic": false,
+      "scores": [
+        54.6,
+        55.8,
+        54.8,
+        55.6,
+        54.2
+      ],
+      "ranks": [
+        2,
+        2,
+        6,
+        6,
+        7
+      ],
+      "minScore": 54.2,
+      "maxScore": 55.8,
+      "diff": -0.4
+    },
+    {
+      "school": "輔仁大學",
+      "dept": "醫學系",
+      "fullName": "輔仁大學 醫學系",
+      "isPublic": false,
+      "scores": [
+        52.0,
+        52.6,
+        53.6,
+        54.2,
+        53.0
+      ],
+      "ranks": [
+        12,
+        13,
+        12,
+        12,
+        13
+      ],
+      "minScore": 52.0,
+      "maxScore": 54.2,
+      "diff": 1.0
+    },
+    {
+      "school": "長庚大學",
+      "dept": "醫學系",
+      "fullName": "長庚大學 醫學系",
+      "isPublic": false,
+      "scores": [
+        53.0,
+        53.8,
+        54.6,
+        54.8,
+        53.8
+      ],
+      "ranks": [
+        6,
+        8,
+        8,
+        8,
+        9
+      ],
+      "minScore": 53.0,
+      "maxScore": 54.8,
+      "diff": 0.8
+    },
+    {
+      "school": "馬偕醫學大學",
+      "dept": "醫學系",
+      "fullName": "馬偕醫學大學 醫學系",
+      "isPublic": false,
+      "scores": [
+        52.8,
+        55.0,
+        53.8,
+        54.0,
+        52.8
+      ],
+      "ranks": [
+        9,
+        4,
+        11,
+        15,
+        15
+      ],
+      "minScore": 52.8,
+      "maxScore": 55.0,
+      "diff": 0.0
+    },
+    {
+      "school": "高雄醫學大學",
+      "dept": "醫學系",
+      "fullName": "高雄醫學大學 醫學系",
+      "isPublic": false,
+      "scores": [
+        52.2,
+        52.8,
+        53.6,
+        54.2,
+        53.2
+      ],
+      "ranks": [
+        10,
+        12,
+        12,
+        12,
+        11
+      ],
+      "minScore": 52.2,
+      "maxScore": 54.2,
+      "diff": 1.0
+    },
+    {
+      "school": "中國醫藥大學",
+      "dept": "牙醫學系",
+      "fullName": "中國醫藥大學 牙醫學系",
+      "isPublic": false,
+      "scores": [
+        50.8,
+        51.6,
+        52.8,
+        54.24,
+        53.05
+      ],
+      "ranks": [
+        15,
+        17,
+        15,
+        11,
+        12
+      ],
+      "minScore": 50.8,
+      "maxScore": 54.24,
+      "diff": 2.25
+    },
+    {
+      "school": "中山醫學大學",
+      "dept": "牙醫學系",
+      "fullName": "中山醫學大學 牙醫學系",
+      "isPublic": false,
+      "scores": [
+        49.53,
+        51.43,
+        52.43,
+        53.38,
+        51.95
+      ],
+      "ranks": [
+        18,
+        18,
+        18,
+        18,
+        17
+      ],
+      "minScore": 49.53,
+      "maxScore": 53.38,
+      "diff": 2.42
+    },
+    {
+      "school": "國立成功大學",
+      "dept": "牙醫學系",
+      "fullName": "國立成功大學 牙醫學系",
+      "isPublic": true,
+      "scores": [
+        51.8,
+        53.0,
+        54.2,
+        54.8,
+        54.0
+      ],
+      "ranks": [
+        13,
+        11,
+        10,
+        8,
+        8
+      ],
+      "minScore": 51.8,
+      "maxScore": 54.8,
+      "diff": 2.2
+    },
+    {
+      "school": "國立臺灣大學",
+      "dept": "牙醫學系",
+      "fullName": "國立臺灣大學 牙醫學系",
+      "isPublic": true,
+      "scores": [
+        54.6,
+        55.0,
+        56.6,
+        57.0,
+        56.0
+      ],
+      "ranks": [
+        2,
+        4,
+        3,
+        2,
+        2
+      ],
+      "minScore": 54.6,
+      "maxScore": 57.0,
+      "diff": 1.4
+    },
+    {
+      "school": "國立陽明交通大學",
+      "dept": "牙醫學系",
+      "fullName": "國立陽明交通大學 牙醫學系",
+      "isPublic": true,
+      "scores": [
+        53.0,
+        54.2,
+        55.0,
+        56.0,
+        55.2
+      ],
+      "ranks": [
+        6,
+        7,
+        5,
+        4,
+        4
+      ],
+      "minScore": 53.0,
+      "maxScore": 56.0,
+      "diff": 2.2
+    },
+    {
+      "school": "臺北醫學大學",
+      "dept": "牙醫學系",
+      "fullName": "臺北醫學大學 牙醫學系",
+      "isPublic": false,
+      "scores": [
+        52.2,
+        53.4,
+        54.8,
+        55.2,
+        54.6
+      ],
+      "ranks": [
+        10,
+        10,
+        6,
+        7,
+        6
+      ],
+      "minScore": 52.2,
+      "maxScore": 55.2,
+      "diff": 2.4
+    },
+    {
+      "school": "高雄醫學大學",
+      "dept": "牙醫學系",
+      "fullName": "高雄醫學大學 牙醫學系",
+      "isPublic": false,
+      "scores": [
+        50.8,
+        51.8,
+        53.2,
+        54.2,
+        53.4
+      ],
+      "ranks": [
+        15,
+        15,
+        14,
+        12,
+        10
+      ],
+      "minScore": 50.8,
+      "maxScore": 54.2,
+      "diff": 2.6
+    }
+  ],
+  "護理": [
+    {
+      "school": "中國醫藥大學",
+      "dept": "護理學系",
+      "fullName": "中國醫藥大學 護理學系",
+      "isPublic": false,
+      "scores": [
+        23.25,
+        40.0,
+        42.0,
+        42.33,
+        42.67
+      ],
+      "ranks": [
+        6,
+        5,
+        5,
+        5,
+        5
+      ],
+      "minScore": 23.25,
+      "maxScore": 42.67,
+      "diff": 19.42
+    },
+    {
+      "school": "中山醫學大學",
+      "dept": "護理學系",
+      "fullName": "中山醫學大學 護理學系",
+      "isPublic": false,
+      "scores": [
+        19.53,
+        31.5,
+        33.25,
+        32.75,
+        30.5
+      ],
+      "ranks": [
+        11,
+        10,
+        9,
+        11,
+        11
+      ],
+      "minScore": 19.53,
+      "maxScore": 33.25,
+      "diff": 10.97
+    },
+    {
+      "school": "亞洲大學",
+      "dept": "護理學系(國際護理組)",
+      "fullName": "亞洲大學 護理學系(國際護理組)",
+      "isPublic": false,
+      "scores": [
+        12.67,
+        20.14,
+        20.86,
+        26.45,
+        21.64
+      ],
+      "ranks": [
+        18,
+        16,
+        20,
+        16,
+        17
+      ],
+      "minScore": 12.67,
+      "maxScore": 26.45,
+      "diff": 8.97
+    },
+    {
+      "school": "亞洲大學",
+      "dept": "護理學系(智慧護理組)",
+      "fullName": "亞洲大學 護理學系(智慧護理組)",
+      "isPublic": false,
+      "scores": [
+        null,
+        null,
+        null,
+        34.45,
+        31.45
+      ],
+      "ranks": [
+        null,
+        null,
+        null,
+        10,
+        10
+      ],
+      "minScore": 31.45,
+      "maxScore": 34.45,
+      "diff": null
+    },
+    {
+      "school": "亞洲大學",
+      "dept": "護理學系(臨床照護組)",
+      "fullName": "亞洲大學 護理學系(臨床照護組)",
+      "isPublic": false,
+      "scores": [
+        15.75,
+        24.33,
+        28.38,
+        29.82,
+        22.91
+      ],
+      "ranks": [
+        16,
+        15,
+        16,
+        15,
+        16
+      ],
+      "minScore": 15.75,
+      "maxScore": 29.82,
+      "diff": 7.16
+    },
+    {
+      "school": "亞洲大學",
+      "dept": "護理學系(銀髮智慧照護組)",
+      "fullName": "亞洲大學 護理學系(銀髮智慧照護組)",
+      "isPublic": false,
+      "scores": [
+        null,
+        null,
+        32.57,
+        null,
+        null
+      ],
+      "ranks": [
+        null,
+        null,
+        10,
+        null,
+        null
+      ],
+      "minScore": 32.57,
+      "maxScore": 32.57,
+      "diff": null
+    },
+    {
+      "school": "亞洲大學",
+      "dept": "護理學系(高齡長期照護組)",
+      "fullName": "亞洲大學 護理學系(高齡長期照護組)",
+      "isPublic": false,
+      "scores": [
+        20.75,
+        27.0,
+        null,
+        null,
+        null
+      ],
+      "ranks": [
+        10,
+        14,
+        null,
+        null,
+        null
+      ],
+      "minScore": 20.75,
+      "maxScore": 27.0,
+      "diff": null
+    },
+    {
+      "school": "元智大學",
+      "dept": "護理學系",
+      "fullName": "元智大學 護理學系",
+      "isPublic": false,
+      "scores": [
+        null,
+        null,
+        31.0,
+        31.33,
+        26.0
+      ],
+      "ranks": [
+        null,
+        null,
+        13,
+        13,
+        13
+      ],
+      "minScore": 26.0,
+      "maxScore": 31.33,
+      "diff": null
+    },
+    {
+      "school": "國立中山大學",
+      "dept": "護理學系",
+      "fullName": "國立中山大學 護理學系",
+      "isPublic": true,
+      "scores": [
+        null,
+        null,
+        null,
+        40.08,
+        37.17
+      ],
+      "ranks": [
+        null,
+        null,
+        null,
+        7,
+        8
+      ],
+      "minScore": 37.17,
+      "maxScore": 40.08,
+      "diff": null
+    },
+    {
+      "school": "國立成功大學",
+      "dept": "護理學系",
+      "fullName": "國立成功大學 護理學系",
+      "isPublic": true,
+      "scores": [
+        41.92,
+        43.25,
+        44.42,
+        47.6,
+        46.8
+      ],
+      "ranks": [
+        2,
+        3,
+        3,
+        2,
+        2
+      ],
+      "minScore": 41.92,
+      "maxScore": 47.6,
+      "diff": 4.88
+    },
+    {
+      "school": "國立暨南國際大學",
+      "dept": "護理學系",
+      "fullName": "國立暨南國際大學 護理學系",
+      "isPublic": true,
+      "scores": [
+        null,
+        34.95,
+        32.37,
+        32.62,
+        24.88
+      ],
+      "ranks": [
+        null,
+        8,
+        11,
+        12,
+        15
+      ],
+      "minScore": 24.88,
+      "maxScore": 34.95,
+      "diff": null
+    },
+    {
+      "school": "國立臺東大學",
+      "dept": "護理學系",
+      "fullName": "國立臺東大學 護理學系",
+      "isPublic": true,
+      "scores": [
+        null,
+        null,
+        null,
+        null,
+        29.56
+      ],
+      "ranks": [
+        null,
+        null,
+        null,
+        null,
+        12
+      ],
+      "minScore": 29.56,
+      "maxScore": 29.56,
+      "diff": null
+    },
+    {
+      "school": "國立臺灣大學",
+      "dept": "護理學系",
+      "fullName": "國立臺灣大學 護理學系",
+      "isPublic": true,
+      "scores": [
+        44.8,
+        46.2,
+        48.2,
+        48.0,
+        45.4
+      ],
+      "ranks": [
+        1,
+        1,
+        1,
+        1,
+        4
+      ],
+      "minScore": 44.8,
+      "maxScore": 48.2,
+      "diff": 0.6
+    },
+    {
+      "school": "國立金門大學",
+      "dept": "護理學系",
+      "fullName": "國立金門大學 護理學系",
+      "isPublic": true,
+      "scores": [
+        21.8,
+        29.56,
+        null,
+        null,
+        null
+      ],
+      "ranks": [
+        9,
+        11,
+        null,
+        null,
+        null
+      ],
+      "minScore": 21.8,
+      "maxScore": 29.56,
+      "diff": null
+    },
+    {
+      "school": "國立金門大學",
+      "dept": "護理學系(A組)",
+      "fullName": "國立金門大學 護理學系(A組)",
+      "isPublic": true,
+      "scores": [
+        null,
+        null,
+        31.22,
+        26.22,
+        20.89
+      ],
+      "ranks": [
+        null,
+        null,
+        12,
+        17,
+        18
+      ],
+      "minScore": 20.89,
+      "maxScore": 31.22,
+      "diff": null
+    },
+    {
+      "school": "國立金門大學",
+      "dept": "護理學系(B組)",
+      "fullName": "國立金門大學 護理學系(B組)",
+      "isPublic": true,
+      "scores": [
+        null,
+        null,
+        23.67,
+        25.11,
+        18.67
+      ],
+      "ranks": [
+        null,
+        null,
+        19,
+        19,
+        20
+      ],
+      "minScore": 18.67,
+      "maxScore": 25.11,
+      "diff": null
+    },
+    {
+      "school": "國立陽明交通大學",
+      "dept": "護理學系",
+      "fullName": "國立陽明交通大學 護理學系",
+      "isPublic": true,
+      "scores": [
+        41.73,
+        43.27,
+        45.36,
+        46.0,
+        47.89
+      ],
+      "ranks": [
+        3,
+        2,
+        2,
+        3,
+        1
+      ],
+      "minScore": 41.73,
+      "maxScore": 47.89,
+      "diff": 6.16
+    },
+    {
+      "school": "大葉大學",
+      "dept": "護理學系",
+      "fullName": "大葉大學 護理學系",
+      "isPublic": false,
+      "scores": [
+        19.52,
+        20.0,
+        null,
+        15.43,
+        16.61
+      ],
+      "ranks": [
+        12,
+        17,
+        null,
+        22,
+        21
+      ],
+      "minScore": 15.43,
+      "maxScore": 20.0,
+      "diff": -2.91
+    },
+    {
+      "school": "大葉大學",
+      "dept": "護理學系(國際組)",
+      "fullName": "大葉大學 護理學系(國際組)",
+      "isPublic": false,
+      "scores": [
+        null,
+        null,
+        16.87,
+        null,
+        null
+      ],
+      "ranks": [
+        null,
+        null,
+        21,
+        null,
+        null
+      ],
+      "minScore": 16.87,
+      "maxScore": 16.87,
+      "diff": null
+    },
+    {
+      "school": "大葉大學",
+      "dept": "護理學系(臨床組)",
+      "fullName": "大葉大學 護理學系(臨床組)",
+      "isPublic": false,
+      "scores": [
+        null,
+        null,
+        24.87,
+        null,
+        null
+      ],
+      "ranks": [
+        null,
+        null,
+        18,
+        null,
+        null
+      ],
+      "minScore": 24.87,
+      "maxScore": 24.87,
+      "diff": null
+    },
+    {
+      "school": "慈濟大學",
+      "dept": "護理學系",
+      "fullName": "慈濟大學 護理學系",
+      "isPublic": false,
+      "scores": [
+        13.67,
+        27.4,
+        29.0,
+        15.6,
+        16.6
+      ],
+      "ranks": [
+        17,
+        13,
+        15,
+        21,
+        22
+      ],
+      "minScore": 13.67,
+      "maxScore": 29.0,
+      "diff": 2.93
+    },
+    {
+      "school": "義守大學",
+      "dept": "護理學系",
+      "fullName": "義守大學 護理學系",
+      "isPublic": false,
+      "scores": [
+        18.0,
+        15.2,
+        26.22,
+        25.78,
+        18.96
+      ],
+      "ranks": [
+        14,
+        19,
+        17,
+        18,
+        19
+      ],
+      "minScore": 15.2,
+      "maxScore": 26.22,
+      "diff": 0.96
+    },
+    {
+      "school": "臺北醫學大學",
+      "dept": "護理學系",
+      "fullName": "臺北醫學大學 護理學系",
+      "isPublic": false,
+      "scores": [
+        34.76,
+        42.4,
+        43.8,
+        43.9,
+        46.75
+      ],
+      "ranks": [
+        4,
+        4,
+        4,
+        4,
+        3
+      ],
+      "minScore": 34.76,
+      "maxScore": 46.75,
+      "diff": 11.99
+    },
+    {
+      "school": "輔仁大學",
+      "dept": "護理學系",
+      "fullName": "輔仁大學 護理學系",
+      "isPublic": false,
+      "scores": [
+        16.14,
+        31.9,
+        35.0,
+        34.88,
+        34.12
+      ],
+      "ranks": [
+        15,
+        9,
+        8,
+        9,
+        9
+      ],
+      "minScore": 16.14,
+      "maxScore": 35.0,
+      "diff": 17.98
+    },
+    {
+      "school": "長庚大學",
+      "dept": "護理學系",
+      "fullName": "長庚大學 護理學系",
+      "isPublic": false,
+      "scores": [
+        24.2,
+        38.2,
+        40.0,
+        40.88,
+        38.38
+      ],
+      "ranks": [
+        5,
+        6,
+        6,
+        6,
+        7
+      ],
+      "minScore": 24.2,
+      "maxScore": 40.88,
+      "diff": 14.18
+    },
+    {
+      "school": "長榮大學",
+      "dept": "護理學系",
+      "fullName": "長榮大學 護理學系",
+      "isPublic": false,
+      "scores": [
+        23.09,
+        16.45,
+        16.18,
+        19.64,
+        15.36
+      ],
+      "ranks": [
+        7,
+        18,
+        22,
+        20,
+        23
+      ],
+      "minScore": 15.36,
+      "maxScore": 23.09,
+      "diff": -7.73
+    },
+    {
+      "school": "馬偕醫學大學",
+      "dept": "護理學系",
+      "fullName": "馬偕醫學大學 護理學系",
+      "isPublic": false,
+      "scores": [
+        18.18,
+        29.55,
+        30.91,
+        30.55,
+        25.0
+      ],
+      "ranks": [
+        13,
+        12,
+        14,
+        14,
+        14
+      ],
+      "minScore": 18.18,
+      "maxScore": 30.91,
+      "diff": 6.82
+    },
+    {
+      "school": "高雄醫學大學",
+      "dept": "護理學系",
+      "fullName": "高雄醫學大學 護理學系",
+      "isPublic": false,
+      "scores": [
+        22.2,
+        36.6,
+        37.48,
+        37.6,
+        39.75
+      ],
+      "ranks": [
+        8,
+        7,
+        7,
+        8,
+        6
+      ],
+      "minScore": 22.2,
+      "maxScore": 39.75,
+      "diff": 17.55
+    }
+  ],
+  "聽語": [
+    {
+      "school": "亞洲大學",
+      "dept": "聽力暨語言治療學系",
+      "fullName": "亞洲大學 聽力暨語言治療學系",
+      "isPublic": false,
+      "scores": [
+        35.0,
+        34.8,
+        41.6,
+        41.6,
+        41.8
+      ],
+      "ranks": [
+        1,
+        5,
+        2,
+        2,
+        2
+      ],
+      "minScore": 34.8,
+      "maxScore": 41.8,
+      "diff": 6.8
+    },
+    {
+      "school": "馬偕醫學大學",
+      "dept": "聽力暨語言治療學系聽力組",
+      "fullName": "馬偕醫學大學 聽力暨語言治療學系聽力組",
+      "isPublic": false,
+      "scores": [
+        29.67,
+        36.08,
+        36.77,
+        33.85,
+        33.18
+      ],
+      "ranks": [
+        4,
+        4,
+        5,
+        5,
+        5
+      ],
+      "minScore": 29.67,
+      "maxScore": 36.77,
+      "diff": 3.51
+    },
+    {
+      "school": "馬偕醫學大學",
+      "dept": "聽力暨語言治療學系語言組",
+      "fullName": "馬偕醫學大學 聽力暨語言治療學系語言組",
+      "isPublic": false,
+      "scores": [
+        33.62,
+        40.54,
+        41.04,
+        38.67,
+        38.5
+      ],
+      "ranks": [
+        2,
+        2,
+        3,
+        4,
+        3
+      ],
+      "minScore": 33.62,
+      "maxScore": 41.04,
+      "diff": 4.88
+    },
+    {
+      "school": "中山醫學大學",
+      "dept": "語言治療與聽力學系聽力組",
+      "fullName": "中山醫學大學 語言治療與聽力學系聽力組",
+      "isPublic": false,
+      "scores": [
+        22.17,
+        37.58,
+        39.33,
+        39.08,
+        37.33
+      ],
+      "ranks": [
+        5,
+        3,
+        4,
+        3,
+        4
+      ],
+      "minScore": 22.17,
+      "maxScore": 39.33,
+      "diff": 15.16
+    },
+    {
+      "school": "中山醫學大學",
+      "dept": "語言治療與聽力學系語言治療組",
+      "fullName": "中山醫學大學 語言治療與聽力學系語言治療組",
+      "isPublic": false,
+      "scores": [
+        30.5,
+        42.17,
+        43.67,
+        43.08,
+        44.0
+      ],
+      "ranks": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "minScore": 30.5,
+      "maxScore": 44.0,
+      "diff": 13.5
+    }
+  ],
+  "視光": [
+    {
+      "school": "中山醫學大學",
+      "dept": "視光學系",
+      "fullName": "中山醫學大學 視光學系",
+      "isPublic": false,
+      "scores": [
+        22.11,
+        34.33,
+        37.11,
+        36.78,
+        35.22
+      ],
+      "ranks": [
+        1,
+        1,
+        1,
+        2,
+        1
+      ],
+      "minScore": 22.11,
+      "maxScore": 37.11,
+      "diff": 13.11
+    },
+    {
+      "school": "亞洲大學",
+      "dept": "視光學系",
+      "fullName": "亞洲大學 視光學系",
+      "isPublic": false,
+      "scores": [
+        19.86,
+        31.43,
+        36.3,
+        38.3,
+        32.2
+      ],
+      "ranks": [
+        2,
+        3,
+        2,
+        1,
+        2
+      ],
+      "minScore": 19.86,
+      "maxScore": 38.3,
+      "diff": 12.34
+    },
+    {
+      "school": "大葉大學",
+      "dept": "視光學系",
+      "fullName": "大葉大學 視光學系",
+      "isPublic": false,
+      "scores": [
+        null,
+        15.2,
+        15.48,
+        12.87,
+        15.04
+      ],
+      "ranks": [
+        null,
+        4,
+        4,
+        4,
+        4
+      ],
+      "minScore": 12.87,
+      "maxScore": 15.48,
+      "diff": null
+    },
+    {
+      "school": "馬偕醫學大學",
+      "dept": "視光學系",
+      "fullName": "馬偕醫學大學 視光學系",
+      "isPublic": false,
+      "scores": [
+        null,
+        31.91,
+        32.57,
+        32.86,
+        29.48
+      ],
+      "ranks": [
+        null,
+        2,
+        3,
+        3,
+        3
+      ],
+      "minScore": 29.48,
+      "maxScore": 32.86,
+      "diff": null
+    }
+  ],
+  "醫檢": [
+    {
+      "school": "中國醫藥大學",
+      "dept": "醫學檢驗生物技術學系",
+      "fullName": "中國醫藥大學 醫學檢驗生物技術學系",
+      "isPublic": false,
+      "scores": [
+        40.71,
+        43.21,
+        46.79,
+        47.71,
+        45.57
+      ],
+      "ranks": [
+        5,
+        6,
+        5,
+        4,
+        6
+      ],
+      "minScore": 40.71,
+      "maxScore": 47.71,
+      "diff": 4.86
+    },
+    {
+      "school": "中山醫學大學",
+      "dept": "醫學檢驗暨生物技術學系",
+      "fullName": "中山醫學大學 醫學檢驗暨生物技術學系",
+      "isPublic": false,
+      "scores": [
+        36.0,
+        41.25,
+        44.0,
+        43.0,
+        41.0
+      ],
+      "ranks": [
+        8,
+        8,
+        8,
+        8,
+        9
+      ],
+      "minScore": 36.0,
+      "maxScore": 44.0,
+      "diff": 5.0
+    },
+    {
+      "school": "亞洲大學",
+      "dept": "醫學檢驗暨生物技術學系(生物技術組)",
+      "fullName": "亞洲大學 醫學檢驗暨生物技術學系(生物技術組)",
+      "isPublic": false,
+      "scores": [
+        27.36,
+        34.36,
+        37.18,
+        39.27,
+        37.73
+      ],
+      "ranks": [
+        10,
+        9,
+        10,
+        10,
+        10
+      ],
+      "minScore": 27.36,
+      "maxScore": 39.27,
+      "diff": 10.37
+    },
+    {
+      "school": "亞洲大學",
+      "dept": "醫學檢驗暨生物技術學系(醫事檢驗組)",
+      "fullName": "亞洲大學 醫學檢驗暨生物技術學系(醫事檢驗組)",
+      "isPublic": false,
+      "scores": [
+        32.92,
+        33.38,
+        36.23,
+        38.67,
+        35.5
+      ],
+      "ranks": [
+        9,
+        10,
+        12,
+        11,
+        11
+      ],
+      "minScore": 32.92,
+      "maxScore": 38.67,
+      "diff": 2.58
+    },
+    {
+      "school": "國立成功大學",
+      "dept": "醫學檢驗生物技術學系",
+      "fullName": "國立成功大學 醫學檢驗生物技術學系",
+      "isPublic": true,
+      "scores": [
+        45.04,
+        46.26,
+        48.13,
+        47.43,
+        46.57
+      ],
+      "ranks": [
+        4,
+        4,
+        4,
+        5,
+        4
+      ],
+      "minScore": 45.04,
+      "maxScore": 48.13,
+      "diff": 1.53
+    },
+    {
+      "school": "國立臺灣大學",
+      "dept": "醫學檢驗暨生物技術學系",
+      "fullName": "國立臺灣大學 醫學檢驗暨生物技術學系",
+      "isPublic": true,
+      "scores": [
+        48.2,
+        48.6,
+        50.8,
+        51.0,
+        49.4
+      ],
+      "ranks": [
+        1,
+        1,
+        1,
+        1,
+        2
+      ],
+      "minScore": 48.2,
+      "maxScore": 51.0,
+      "diff": 1.2
+    },
+    {
+      "school": "國立陽明交通大學",
+      "dept": "醫學生物技術暨檢驗學系",
+      "fullName": "國立陽明交通大學 醫學生物技術暨檢驗學系",
+      "isPublic": true,
+      "scores": [
+        45.69,
+        46.35,
+        49.4,
+        48.93,
+        49.85
+      ],
+      "ranks": [
+        3,
+        3,
+        2,
+        3,
+        1
+      ],
+      "minScore": 45.69,
+      "maxScore": 49.85,
+      "diff": 4.16
+    },
+    {
+      "school": "慈濟大學",
+      "dept": "醫學檢驗生物技術學系",
+      "fullName": "慈濟大學 醫學檢驗生物技術學系",
+      "isPublic": false,
+      "scores": [
+        16.75,
+        33.25,
+        36.75,
+        37.75,
+        33.0
+      ],
+      "ranks": [
+        12,
+        11,
+        11,
+        12,
+        12
+      ],
+      "minScore": 16.75,
+      "maxScore": 37.75,
+      "diff": 16.25
+    },
+    {
+      "school": "義守大學",
+      "dept": "醫學檢驗技術學系",
+      "fullName": "義守大學 醫學檢驗技術學系",
+      "isPublic": false,
+      "scores": [
+        17.86,
+        27.14,
+        34.0,
+        33.29,
+        30.0
+      ],
+      "ranks": [
+        11,
+        12,
+        13,
+        13,
+        13
+      ],
+      "minScore": 17.86,
+      "maxScore": 34.0,
+      "diff": 12.14
+    },
+    {
+      "school": "臺北醫學大學",
+      "dept": "醫學檢驗暨生物技術學系",
+      "fullName": "臺北醫學大學 醫學檢驗暨生物技術學系",
+      "isPublic": false,
+      "scores": [
+        45.73,
+        47.36,
+        49.18,
+        49.64,
+        48.09
+      ],
+      "ranks": [
+        2,
+        2,
+        3,
+        2,
+        3
+      ],
+      "minScore": 45.73,
+      "maxScore": 49.64,
+      "diff": 2.36
+    },
+    {
+      "school": "長庚大學",
+      "dept": "醫學生物技術暨檢驗學系",
+      "fullName": "長庚大學 醫學生物技術暨檢驗學系",
+      "isPublic": false,
+      "scores": [
+        37.2,
+        41.3,
+        44.1,
+        46.0,
+        44.88
+      ],
+      "ranks": [
+        7,
+        7,
+        7,
+        6,
+        7
+      ],
+      "minScore": 37.2,
+      "maxScore": 46.0,
+      "diff": 7.68
+    },
+    {
+      "school": "馬偕醫學大學",
+      "dept": "醫學檢驗暨再生醫學學系",
+      "fullName": "馬偕醫學大學 醫學檢驗暨再生醫學學系",
+      "isPublic": false,
+      "scores": [
+        null,
+        null,
+        43.3,
+        43.0,
+        43.1
+      ],
+      "ranks": [
+        null,
+        null,
+        9,
+        8,
+        8
+      ],
+      "minScore": 43.0,
+      "maxScore": 43.3,
+      "diff": null
+    },
+    {
+      "school": "高雄醫學大學",
+      "dept": "醫學檢驗生物技術學系",
+      "fullName": "高雄醫學大學 醫學檢驗生物技術學系",
+      "isPublic": false,
+      "scores": [
+        40.0,
+        45.75,
+        46.25,
+        46.0,
+        45.62
+      ],
+      "ranks": [
+        6,
+        5,
+        6,
+        6,
+        5
+      ],
+      "minScore": 40.0,
+      "maxScore": 46.25,
+      "diff": 5.62
+    }
+  ]
+};
         const groups = Object.keys(rawData);
         let currentGroup = groups[0];
         let isSmooth = true;
